@@ -8,34 +8,221 @@ import {
   useTexture,
 } from "@react-three/drei";
 import { extend, useThree, useFrame } from "@react-three/fiber";
-import { RigidBody } from "@react-three/rapier";
+import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { ShipController } from "./ShipController";
 import { Pirate } from "./Pirate";
-import { useMemo, useRef } from "react";
-import { DEG2RAD } from "three/src/math/MathUtils";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Water } from "three-stdlib";
+import { useControls } from "leva";
+import { useGameEngine, screen } from "../hooks/useGameEngine";
 
 extend({ Water });
 
 export const Experience = () => {
   const camControl = useRef();
-  const texture = useTexture("/images/bg1.png");
+  const meshFitCameraMenu = useRef();
+  const meshFitCameraGame = useRef();
+
+  const { screenState } = useGameEngine();
+
+  const {
+    maxAzimuthAngle,
+    maxDistance,
+    maxPolarAngle,
+    minAzimuthAngle,
+    minDistance,
+    minPolarAngle,
+  } = useControls("Camera Restrict", {
+    maxPolarAngle: {
+      value: 95,
+      step: 5,
+      min: 45,
+      max: 120,
+    },
+    minPolarAngle: {
+      value: 45,
+      step: 5,
+      min: 20,
+      max: 95,
+    },
+    maxAzimuthAngle: {
+      value: 8,
+      step: 1,
+      min: -20,
+      max: 20,
+    },
+    minAzimuthAngle: {
+      value: -8,
+      step: 1,
+      min: -20,
+      max: 20,
+    },
+    minDistance: {
+      value: 16,
+      step: 1,
+      min: 5,
+      max: 20,
+    },
+    maxDistance: {
+      value: 40,
+      step: 1,
+      min: 16,
+      max: 40,
+    },
+  });
+
+  const camConfig = useControls("Camera", {
+    menuPos: {
+      value: [-16, 17, 14],
+      // value: [-18, 17, 14],
+      step: 1,
+      min: -50,
+      max: 50,
+    },
+    menuTarget: {
+      value: [-4, 7, 2],
+      // value: [-11, 7, 2],
+      step: 1,
+      min: -50,
+      max: 50,
+    },
+    gamePos: {
+      value: [0.4, 5, 20],
+      step: 1,
+      min: -50,
+      max: 50,
+    },
+    gameTarget: {
+      value: [0, 5, 0],
+      step: 1,
+      min: -50,
+      max: 50,
+    },
+  });
+
+  const skyConfig = useControls("Sky", {
+    sunPosition: {
+      value: [500, 150, 0],
+      step: 10,
+      min: -1000,
+      max: 1000,
+    },
+    turbidity: {
+      value: 0.1,
+      step: 0.1,
+      min: -1,
+      max: 20,
+    },
+    scale: {
+      value: 1000,
+      step: 100,
+      min: 100,
+      max: 2000,
+    },
+  });
+
+  const cloudConfig = useControls("Cloud", {
+    position: {
+      value: [0, 19, 1],
+      step: 1,
+      min: -15,
+      max: 50,
+    },
+    bounds: {
+      value: [22, -3, 16],
+      step: 1,
+      min: -90,
+      max: 90,
+    },
+    scale: {
+      value: 0.6,
+      step: 0.1,
+      min: 0,
+      max: 1,
+    },
+    volume: {
+      value: 32,
+      step: 1,
+      min: 1,
+      max: 40,
+    },
+  });
+
+  const testConfig = useControls("Test", {
+    spawnSize: {
+      value: [20, 2, 1],
+      step: 1,
+      min: -100,
+      max: 100,
+    },
+    viewSize: {
+      value: [20.5, 14, 5],
+      step: 0.5,
+      min: -100,
+      max: 100,
+    },
+  });
+
+  useEffect(() => {
+    if (screenState === screen.MENU) {
+      const {
+        menuPos: [posX, posY, posZ],
+        menuTarget: [targetX, targetY, targetZ],
+      } = camConfig;
+
+      camControl.current.setLookAt(
+        posX,
+        posY,
+        posZ,
+        targetX,
+        targetY,
+        targetZ,
+        true
+      );
+    }
+    if (screenState === screen.GAME) {
+      const {
+        gamePos: [posX, posY, posZ],
+        gameTarget: [targetX, targetY, targetZ],
+      } = camConfig;
+
+      camControl.current.setLookAt(
+        posX,
+        posY,
+        posZ,
+        targetX,
+        targetY,
+        targetZ,
+        true
+      );
+    }
+    fitCamera();
+  }, [screenState, camConfig]);
+
+  const fitCamera = useCallback(async () => {
+    if (screenState === screen.GAME) {
+      camControl.current.fitToBox(meshFitCameraGame.current, true);
+    }
+  }, [camControl, screenState, meshFitCameraMenu, meshFitCameraGame]);
+
+  useEffect(() => {
+    window.addEventListener("resize", fitCamera);
+    return () => window.removeEventListener("resize", fitCamera);
+  }, [fitCamera]);
 
   return (
     <>
       <CameraControls
         makeDefault
         ref={camControl}
-        maxPolarAngle={DEG2RAD * 95}
-        minPolarAngle={DEG2RAD * 45}
-        maxAzimuthAngle={DEG2RAD * 2}
-        minAzimuthAngle={DEG2RAD * -2}
-        // maxDistance={20}
-        // TODO: maybe zoom out if dimension change?
-        minDistance={16}
+        maxPolarAngle={THREE.MathUtils.DEG2RAD * maxPolarAngle}
+        minPolarAngle={THREE.MathUtils.DEG2RAD * minPolarAngle}
+        maxAzimuthAngle={THREE.MathUtils.DEG2RAD * maxAzimuthAngle}
+        minAzimuthAngle={THREE.MathUtils.DEG2RAD * minAzimuthAngle}
+        minDistance={minDistance}
+        maxDistance={maxDistance}
         onEnd={() => {
-          // TODO: also add this lookAt mechanics to menu interaction
-          camControl.current.setLookAt(0.4, 5, 20, 0, 5, 0, true);
+          fitCamera();
         }}
       />
 
@@ -44,64 +231,85 @@ export const Experience = () => {
       <directionalLight
         position={[5, 5, 5]}
         intensity={0.8}
-        castShadow
+        // castShadow
         color={"#a5d6ff"}
       />
 
       {/* BACKGROUND */}
-      <Sky scale={1000} sunPosition={[500, 150, -1000]} turbidity={0.1} />
+      <Sky {...skyConfig} />
+
       {/* TODO: Animte clouds */}
       <Clouds
+        limit={120}
         material={THREE.MeshBasicMaterial}
-        limit={30}
-        position={[0, 12, 1]}
+        position={cloudConfig.position}
       >
         <Cloud
+          bounds={cloudConfig.bounds}
+          color="#ececec"
+          scale={cloudConfig.scale}
           seed={1}
           segments={20}
-          scale={2}
-          bounds={[10, 2, 5]}
-          volume={4}
-          color="#ececec"
+          volume={cloudConfig.volume}
         />
         <Cloud
-          seed={1}
-          scale={2}
-          bounds={[10, 2, 5]}
-          volume={4}
+          bounds={cloudConfig.bounds}
           color="gray"
           fade={100}
-        />
-        <Cloud
+          scale={cloudConfig.scale}
           seed={1}
-          scale={2}
-          bounds={[10, 2, 5]}
-          volume={5}
-          color="#2b2415"
-          fade={100}
+          volume={cloudConfig.volume}
         />
       </Clouds>
 
-      <mesh position={[0, 8, -10]} rotation={[0, 0, 0]}>
-        <planeGeometry args={[48, 24]} />
-        <meshBasicMaterial resolution={1024} map={texture} />
+      <mesh ref={meshFitCameraGame} position={[0, 5, 0]} visible={false}>
+        <boxGeometry
+          // the y gives the restriction for landscape windows
+          // the x gives the restriction for portrait windows
+          args={[
+            testConfig.viewSize[0],
+            testConfig.viewSize[1],
+            testConfig.viewSize[2],
+          ]}
+        />
+        <meshBasicMaterial color="red" transparent opacity={0.3} />
       </mesh>
 
+      <BackgroundPanel />
+
+      {/* SPAWNING ZONE TEST */}
+      <mesh position={[0, 22, 0]} visible={true}>
+        <boxGeometry
+          // the y gives the restriction for landscape windows
+          // the x gives the restriction for portrait windows
+          args={[testConfig.spawnSize[0], testConfig.spawnSize[1], 1]}
+        />
+        <meshBasicMaterial color="green" transparent opacity={0.3} />
+      </mesh>
+      {/* <Rig /> */}
       <Ocean />
 
       <group position-y={-0.5}>
         {/* STAGE */}
         <RigidBody
-          // colliders={false}
           name="floor"
           type="fixed"
           position-y={-2}
           friction={1}
-          args={[32, 4]}
+          args={[32, 1]}
         >
-          <Box scale={[32, 1, 4]}>
+          <Box scale={[32, 1, 2]}>
             <meshStandardMaterial color="skyblue" />
           </Box>
+        </RigidBody>
+
+        {/* Void */}
+        <RigidBody colliders={false} type="fixed" name="void">
+          <mesh position={[0, -5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[50, 50]} />
+            <meshBasicMaterial color="#000000" toneMapped={false} />
+          </mesh>
+          <CuboidCollider position={[0, -5, 0]} args={[25, 0.1, 25]} sensor />
         </RigidBody>
 
         {/* CHARACTER */}
@@ -133,9 +341,7 @@ function Ocean() {
     }),
     [gl.encoding, waterNormals]
   );
-  useFrame(
-    (state, delta) => (ref.current.material.uniforms.time.value += delta)
-  );
+  useFrame((_, delta) => (ref.current.material.uniforms.time.value += delta));
   return (
     <water
       ref={ref}
@@ -143,5 +349,22 @@ function Ocean() {
       rotation-x={-Math.PI / 2}
       position={[0, -0.5, 0]}
     />
+  );
+}
+
+function BackgroundPanel({ children }: { children?: React.ReactNode }) {
+  const texture = useTexture("/images/bg1.png");
+
+  return (
+    <mesh position={[0, 10, -13]} rotation={[0, 0, 0]}>
+      <planeGeometry args={[54, 32]} />
+      <meshBasicMaterial
+        resolution={1024}
+        map={texture}
+        // transparent
+        // opacity={0}
+      />
+      {children}
+    </mesh>
   );
 }
