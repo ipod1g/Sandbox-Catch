@@ -1,27 +1,25 @@
 import * as THREE from "three";
 import {
   Box,
-  MeshReflectorMaterial,
   CameraControls,
   Cloud,
   Clouds,
   Sky,
   useTexture,
 } from "@react-three/drei";
+import { extend, useThree, useFrame } from "@react-three/fiber";
 import { RigidBody } from "@react-three/rapier";
 import { ShipController } from "./ShipController";
-import { People } from "./People";
-import { useEffect, useRef } from "react";
+import { Pirate } from "./Pirate";
+import { useMemo, useRef } from "react";
 import { DEG2RAD } from "three/src/math/MathUtils";
+import { Water } from "three-stdlib";
+
+extend({ Water });
 
 export const Experience = () => {
   const camControl = useRef();
   const texture = useTexture("/images/bg1.png");
-
-  useEffect(() => {
-    // Should happen on game start
-    // camControl.current.truck(0, -4);
-  }, []);
 
   return (
     <>
@@ -32,10 +30,12 @@ export const Experience = () => {
         minPolarAngle={DEG2RAD * 45}
         maxAzimuthAngle={DEG2RAD * 2}
         minAzimuthAngle={DEG2RAD * -2}
-        maxDistance={20}
+        // maxDistance={20}
+        // TODO: maybe zoom out if dimension change?
         minDistance={16}
         onEnd={() => {
-          camControl.current.setLookAt(0.4, 1, 20, 0, 5, 0, true);
+          // TODO: also add this lookAt mechanics to menu interaction
+          camControl.current.setLookAt(0.4, 5, 20, 0, 5, 0, true);
         }}
       />
 
@@ -49,66 +49,53 @@ export const Experience = () => {
       />
 
       {/* BACKGROUND */}
-      <Sky />
+      <Sky scale={1000} sunPosition={[500, 150, -1000]} turbidity={0.1} />
+      {/* TODO: Animte clouds */}
       <Clouds
         material={THREE.MeshBasicMaterial}
-        limit={44}
-        position={[0, 13, -1]}
+        limit={30}
+        position={[0, 12, 1]}
       >
         <Cloud
+          seed={1}
           segments={20}
           scale={2}
           bounds={[10, 2, 5]}
           volume={4}
-          color="white"
+          color="#ececec"
         />
         <Cloud
           seed={1}
           scale={2}
           bounds={[10, 2, 5]}
-          volume={6}
+          volume={4}
           color="gray"
           fade={100}
         />
-
         <Cloud
           seed={1}
           scale={2}
           bounds={[10, 2, 5]}
-          volume={6}
-          color="black"
+          volume={5}
+          color="#2b2415"
           fade={100}
         />
       </Clouds>
-
-      <mesh position={[0, -4, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[50, 50]} />
-        <MeshReflectorMaterial
-          mirror={0.75}
-          blur={[400, 400]}
-          resolution={1024}
-          mixBlur={1}
-          mixStrength={15}
-          depthScale={1}
-          minDepthThreshold={0.85}
-          color="#dbecfb"
-          metalness={0.6}
-          roughness={1}
-        />
-      </mesh>
 
       <mesh position={[0, 8, -10]} rotation={[0, 0, 0]}>
         <planeGeometry args={[48, 24]} />
         <meshBasicMaterial resolution={1024} map={texture} />
       </mesh>
 
-      <group position-y={-1}>
+      <Ocean />
+
+      <group position-y={-0.5}>
         {/* STAGE */}
-        {/* will replace with water */}
         <RigidBody
           // colliders={false}
+          name="floor"
           type="fixed"
-          position-y={-0.5}
+          position-y={-2}
           friction={1}
           args={[32, 4]}
         >
@@ -119,8 +106,42 @@ export const Experience = () => {
 
         {/* CHARACTER */}
         <ShipController />
-        <People />
+        <Pirate />
       </group>
     </>
   );
 };
+
+function Ocean() {
+  const ref = useRef();
+  const gl = useThree((state) => state.gl);
+  const waterNormals = useTexture("/images/waternormals.jpeg");
+  waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
+  const geom = useMemo(() => new THREE.PlaneGeometry(100, 100), []);
+  const config = useMemo(
+    () => ({
+      textureWidth: 512,
+      textureHeight: 512,
+      waterNormals,
+      sunDirection: new THREE.Vector3(),
+      sunColor: 0x5cc8cd,
+      waterColor: 0x2fa7af,
+      // waterColor: 0x001e0f,
+      distortionScale: 3.7,
+      fog: true,
+      format: gl.encoding,
+    }),
+    [gl.encoding, waterNormals]
+  );
+  useFrame(
+    (state, delta) => (ref.current.material.uniforms.time.value += delta)
+  );
+  return (
+    <water
+      ref={ref}
+      args={[geom, config]}
+      rotation-x={-Math.PI / 2}
+      position={[0, -0.5, 0]}
+    />
+  );
+}
