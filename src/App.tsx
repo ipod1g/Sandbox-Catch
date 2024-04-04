@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { Experience } from "./components/Experience";
-import { UI } from "./components/UI";
+import { UI } from "./components/ui";
 import { KeyboardControls, Stats } from "@react-three/drei";
 import { Suspense, useMemo } from "react";
 import { Physics } from "@react-three/rapier";
@@ -25,9 +25,10 @@ function App() {
 
   return (
     <>
-      <Leva hidden={!DEBUG} />
+      <Leva hidden={!DEBUG} collapsed />
       <KeyboardControls map={keyMap}>
         <Canvas
+          // className="!h-[36vw] !aspect-video w-screen sm:!h-screen"
           shadows
           camera={{
             position: [0, 0, 20],
@@ -43,8 +44,7 @@ function App() {
             </>
           ) : undefined}
           <color attach="background" args={["#ececec"]} />
-          <fog attach="fog" args={["#2fa7af", 10, 80]} />
-          {/* <fog attach="fog" args={["#dbecfb", 10, 80]} /> */}
+          {/* <fog attach="fog" args={["#2fa7af", 10, 80]} /> */}
           <Suspense fallback={null}>
             <Physics debug={DEBUG}>
               <Experience />
