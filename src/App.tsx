@@ -43,13 +43,15 @@ function App() {
             </>
           ) : undefined}
           <color attach="background" args={["#ececec"]} />
-          <Suspense>
-            <Physics debug>
+          <fog attach="fog" args={["#2fa7af", 10, 80]} />
+          {/* <fog attach="fog" args={["#dbecfb", 10, 80]} /> */}
+          <Suspense fallback={null}>
+            <Physics debug={DEBUG}>
               <Experience />
             </Physics>
           </Suspense>
         </Canvas>
-        {/* <UI /> */}
+        <UI />
       </KeyboardControls>
     </>
   );
