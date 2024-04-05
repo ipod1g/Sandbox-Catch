@@ -6,6 +6,7 @@ import { Suspense, useMemo } from "react";
 import { Physics } from "@react-three/rapier";
 import { Leva } from "leva";
 import CameraPositionLogger from "./helper/CameraPositionLogger";
+import { Loading } from "./components/three/Loading";
 
 export const Controls = {
   left: "left",
@@ -45,7 +46,7 @@ function App() {
           ) : undefined}
           <color attach="background" args={["#ececec"]} />
           {/* <fog attach="fog" args={["#2fa7af", 10, 80]} /> */}
-          <Suspense fallback={null}>
+          <Suspense fallback={<Loading />}>
             <Physics debug={DEBUG}>
               <Experience />
             </Physics>
