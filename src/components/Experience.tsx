@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import {
   Box,
   CameraControls,
@@ -7,7 +6,7 @@ import {
   Sky,
   useTexture,
 } from "@react-three/drei";
-import { extend, useThree, useFrame } from "@react-three/fiber";
+import { extend, useFrame } from "@react-three/fiber";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { ShipController } from "./ShipController";
 import { Pirate } from "./Pirate";
@@ -15,13 +14,41 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Water } from "three-stdlib";
 import { useControls } from "leva";
 import { useGameEngine, screen } from "../hooks/useGameEngine";
+import {
+  MathUtils,
+  MeshBasicMaterial,
+  PlaneGeometry,
+  RepeatWrapping,
+  Vector3,
+} from "three";
+import type {
+  Mesh,
+  BufferGeometry,
+  NormalBufferAttributes,
+  Material,
+  Object3DEventMap,
+} from "three";
 
 extend({ Water });
 
 export const Experience = () => {
-  const camControl = useRef();
-  const meshFitCameraMenu = useRef();
-  const meshFitCameraGame = useRef();
+  const camControl = useRef<CameraControls>(null);
+  const meshFitCameraMenu =
+    useRef<
+      Mesh<
+        BufferGeometry<NormalBufferAttributes>,
+        Material | Material[],
+        Object3DEventMap
+      >
+    >(null);
+  const meshFitCameraGame =
+    useRef<
+      Mesh<
+        BufferGeometry<NormalBufferAttributes>,
+        Material | Material[],
+        Object3DEventMap
+      >
+    >(null);
 
   const { screenState } = useGameEngine();
 
@@ -163,7 +190,15 @@ export const Experience = () => {
     },
   });
 
+  const fitCamera = useCallback(async () => {
+    if (screenState === screen.GAME) {
+      camControl.current.fitToBox(meshFitCameraGame.current, true);
+    }
+  }, [camControl, screenState, meshFitCameraMenu, meshFitCameraGame]);
+
   useEffect(() => {
+    if (!camControl.current) return;
+
     if (screenState === screen.MENU) {
       const {
         menuPos: [posX, posY, posZ],
@@ -197,13 +232,7 @@ export const Experience = () => {
       );
     }
     fitCamera();
-  }, [screenState, camConfig]);
-
-  const fitCamera = useCallback(async () => {
-    if (screenState === screen.GAME) {
-      camControl.current.fitToBox(meshFitCameraGame.current, true);
-    }
-  }, [camControl, screenState, meshFitCameraMenu, meshFitCameraGame]);
+  }, [screenState, camConfig, fitCamera]);
 
   useEffect(() => {
     window.addEventListener("resize", fitCamera);
@@ -215,10 +244,10 @@ export const Experience = () => {
       <CameraControls
         makeDefault
         ref={camControl}
-        maxPolarAngle={THREE.MathUtils.DEG2RAD * maxPolarAngle}
-        minPolarAngle={THREE.MathUtils.DEG2RAD * minPolarAngle}
-        maxAzimuthAngle={THREE.MathUtils.DEG2RAD * maxAzimuthAngle}
-        minAzimuthAngle={THREE.MathUtils.DEG2RAD * minAzimuthAngle}
+        maxPolarAngle={MathUtils.DEG2RAD * maxPolarAngle}
+        minPolarAngle={MathUtils.DEG2RAD * minPolarAngle}
+        maxAzimuthAngle={MathUtils.DEG2RAD * maxAzimuthAngle}
+        minAzimuthAngle={MathUtils.DEG2RAD * minAzimuthAngle}
         minDistance={minDistance}
         maxDistance={maxDistance}
         onEnd={() => {
@@ -241,7 +270,7 @@ export const Experience = () => {
       {/* TODO: Animte clouds */}
       <Clouds
         limit={120}
-        material={THREE.MeshBasicMaterial}
+        material={MeshBasicMaterial}
         position={cloudConfig.position}
       >
         <Cloud
@@ -322,24 +351,22 @@ export const Experience = () => {
 
 function Ocean() {
   const ref = useRef();
-  const gl = useThree((state) => state.gl);
   const waterNormals = useTexture("/images/waternormals.jpeg");
-  waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
-  const geom = useMemo(() => new THREE.PlaneGeometry(100, 100), []);
+  waterNormals.wrapS = waterNormals.wrapT = RepeatWrapping;
+  const geom = useMemo(() => new PlaneGeometry(180, 180), []);
   const config = useMemo(
     () => ({
       textureWidth: 512,
       textureHeight: 512,
       waterNormals,
-      sunDirection: new THREE.Vector3(),
+      sunDirection: new Vector3(),
       sunColor: 0x5cc8cd,
       waterColor: 0x2fa7af,
       // waterColor: 0x001e0f,
       distortionScale: 3.7,
       fog: true,
-      format: gl.encoding,
     }),
-    [gl.encoding, waterNormals]
+    [waterNormals]
   );
   useFrame((_, delta) => (ref.current.material.uniforms.time.value += delta));
   return (
@@ -357,9 +384,8 @@ function BackgroundPanel({ children }: { children?: React.ReactNode }) {
 
   return (
     <mesh position={[0, 10, -13]} rotation={[0, 0, 0]}>
-      <planeGeometry args={[54, 32]} />
+      <planeGeometry args={[64, 32]} />
       <meshBasicMaterial
-        resolution={1024}
         map={texture}
         // transparent
         // opacity={0}
@@ -368,3 +394,5 @@ function BackgroundPanel({ children }: { children?: React.ReactNode }) {
     </mesh>
   );
 }
+
+useTexture.preload("/images/bg1.png");
