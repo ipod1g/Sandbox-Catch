@@ -13,16 +13,29 @@ const TIME_GAME_ROUND = 60;
 type GameContext = {
   timer: number;
   score: number;
+  screenState: screen;
+  pirates: Pirate[];
   startGame: () => void;
   addScore: (point: number) => void;
-  removePirates: () => void;
+  removePirate: (idx: number) => void;
+  drownedPirate: (idx: number) => void;
+  openLeaderBoard: () => void;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export enum screen {
   MENU = "MENU",
   GAME = "GAME",
   GAME_OVER = "GAME_OVER",
   LEADER_BOARD = "LEADER_BOARD",
+}
+
+export interface Pirate {
+  name: string;
+  img: string;
+  point: number;
+  position: THREE.Vector3;
+  drowned: boolean;
 }
 
 const piratesList = [
@@ -39,8 +52,8 @@ const GameEngineContext = createContext<GameContext | null>(null);
 export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
   const [timer, setTimer] = useState(0);
   const [score, setScore] = useState(0);
-  const [pirates, setPirates] = useState([]);
-  const [screenState, setScreenState] = useState(screen.GAME);
+  const [pirates, setPirates] = useState<Pirate[]>([]);
+  const [screenState, setScreenState] = useState(screen.MENU);
 
   const gameState = {
     timer,
@@ -56,12 +69,11 @@ export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
       // Makes sure it is not generating equally
       const randomPirate = {
         ...piratesList[Math.floor(Math.random() * 10)],
-        // TODO; need to use viewport position for x
-        position: new THREE.Vector3(
-          Math.random() * 10,
-          Math.random() * 5 + 20,
-          0
-        ),
+        // NOTE: the x is from spawn zone value aligned with camera fit
+        // TODO: extract to be from single source
+        // position: new THREE.Vector3(Math.random() * 20 - 10, 21, 0),
+        position: new THREE.Vector3(Math.random() * 16 - 8, 21, 0),
+        drowned: false,
       };
       if (randomPirate.name === undefined) return;
       setPirates((prevPirates) => [...prevPirates, randomPirate]);
@@ -83,6 +95,11 @@ export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
     if (screenState === screen.GAME) {
       runTimer();
     }
+    if (timer === 0 && screenState === screen.GAME) {
+      clearTimer();
+      setScreenState(screen.GAME_OVER);
+    }
+
     return clearTimer;
   }, [timer, screenState, pirates]);
 
@@ -92,12 +109,24 @@ export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
     setTimer(TIME_GAME_ROUND);
   };
 
-  const removePirates = () => {
+  const drownedPirate = (idx: number) => {
     setPirates((prevPirates) => {
       const newPirates = [...prevPirates];
-      newPirates.splice(0, 1);
+      newPirates[idx].drowned = true;
       return newPirates;
     });
+  };
+
+  const removePirate = (idx: number) => {
+    setPirates((prevPirates) => {
+      const newPirates = [...prevPirates];
+      newPirates.splice(idx, 1);
+      return newPirates;
+    });
+  };
+
+  const openLeaderBoard = () => {
+    setScreenState(screen.LEADER_BOARD);
   };
 
   const addScore = (point: number) => {
@@ -110,7 +139,9 @@ export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
         ...gameState,
         addScore,
         startGame,
-        removePirates,
+        drownedPirate,
+        removePirate,
+        openLeaderBoard,
       }}
     >
       {children}

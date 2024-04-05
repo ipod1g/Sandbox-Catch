@@ -1,58 +1,76 @@
-import * as THREE from "three";
-import { Center, Cylinder, Text3D, useTexture } from "@react-three/drei";
-// @ts-expect-error -- TODO: fix this
-import { CylinderCollider, RigidBody } from "@react-three/rapier";
-import { useGameEngine } from "../hooks/useGameEngine";
+import { Cylinder, useTexture, Text } from "@react-three/drei";
+import {
+  CylinderCollider,
+  RigidBody,
+  CollisionTarget,
+} from "@react-three/rapier";
+import { Pirate as IPirate, useGameEngine } from "../hooks/useGameEngine";
+import { Texture } from "three";
+// import { FakeGlowMaterial } from "./three/FakeGlowMaterial";
 
 export const Pirate = () => {
-  const { pirates, removePirates, addScore } = useGameEngine();
+  const { pirates, drownedPirate, removePirate, addScore } = useGameEngine();
 
-  const handleCollisionEnter = ({ other }, point) => {
+  const handleCollisionEnter = (
+    { other }: { other: CollisionTarget },
+    index: number,
+    point: number
+  ) => {
+    if (!other.rigidBodyObject) return;
+
+    if (other.rigidBodyObject.name === "floor") {
+      // TODO: play drowning sound
+      drownedPirate(index);
+    }
+
     if (other.rigidBodyObject.name === "ship") {
+      removePirate(index);
+      if (pirates[index].drowned) return;
       addScore(point);
     }
-    if (other.rigidBodyObject.name === "floor") {
-      setTimeout(() => {
-        // removePirates();
-      }, 300);
-    }
-    // removePirates();
   };
 
   return (
     <group>
-      {pirates?.map((pirate, index) => (
-        <group key={pirate.position + index}>
+      {pirates?.map((pirate: IPirate, index: number) => (
+        <group key={pirate.name + JSON.stringify(pirate.position)}>
           <RigidBody
-            restitution={0.6}
+            restitution={0.5}
             colliders={false}
-            onCollisionEnter={(e) => handleCollisionEnter(e, pirate.point)}
-            key={pirate.position}
+            onCollisionEnter={(e) =>
+              handleCollisionEnter(e, index, pirate.point)
+            }
+            onIntersectionEnter={({ other }) => {
+              if (!other.rigidBodyObject) return;
+              if (other.rigidBodyObject.name === "void") {
+                removePirate(index);
+              }
+            }}
             position={pirate.position}
             rotation={[Math.PI / 2, 0, 0]}
             gravityScale={0.3}
           >
             <CylinderCollider args={[0.25 / 2, 0.5]} />
             <TexturedCylinder img={pirate.img} />
+            {/* <Text rotation={[Math.PI / 2, Math.PI, Math.PI]} anchorY={-1.5}>
+              {pirate.drowned ? "💀" : pirate.point}
+            </Text> */}
           </RigidBody>
-
-          {/* <Center position-y={0.8}>
-            <Text3D font={"./fonts/Noto"} size={0.82}>
-              ら
-              <meshNormalMaterial />
-            </Text3D>
-          </Center> */}
         </group>
       ))}
     </group>
   );
 };
 
-const TexturedCylinder = ({ img }) => {
-  const texture = useTexture(img);
+const TexturedCylinder = ({ img }: { img: string }) => {
+  const texture = useTexture(img) as Texture;
 
   return (
-    <Cylinder scale={[0.5, 0, 0.5]} rotation={[0, Math.PI / 2, 0]}>
+    <Cylinder scale={[0.5, 0.1, 0.5]} rotation={[0, Math.PI / 2, 0]}>
+      {/* <mesh position={[0, 2, -0.5]}>
+        <sphereGeometry args={[10, 2, 0]} />
+        <FakeGlowMaterial glowColor={"0xffffff"} />
+      </mesh> */}
       <meshBasicMaterial map={texture} transparent />
     </Cylinder>
   );
