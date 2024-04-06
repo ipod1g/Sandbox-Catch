@@ -6,7 +6,7 @@ import {
   Sky,
   useTexture,
 } from "@react-three/drei";
-import { extend, useFrame } from "@react-three/fiber";
+import { Object3DNode, extend, useFrame } from "@react-three/fiber";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { ShipController } from "./ShipController";
 import { Pirate } from "./Pirate";
@@ -30,6 +30,12 @@ import type {
 } from "three";
 
 extend({ Water });
+
+declare module "@react-three/fiber" {
+  interface ThreeElements {
+    water: Object3DNode<Water, typeof Water>;
+  }
+}
 
 export const Experience = () => {
   const camControl = useRef<CameraControls>(null);
@@ -191,10 +197,12 @@ export const Experience = () => {
   });
 
   const fitCamera = useCallback(async () => {
+    if (!camControl.current || !meshFitCameraGame.current) return;
+
     if (screenState === screen.GAME) {
       camControl.current.fitToBox(meshFitCameraGame.current, true);
     }
-  }, [camControl, screenState, meshFitCameraMenu, meshFitCameraGame]);
+  }, [camControl, screenState, meshFitCameraGame]);
 
   useEffect(() => {
     if (!camControl.current) return;
@@ -267,7 +275,7 @@ export const Experience = () => {
       {/* BACKGROUND */}
       <Sky {...skyConfig} />
 
-      {/* TODO: Animte clouds */}
+      {/* TODO: Animate clouds */}
       <Clouds
         limit={120}
         material={MeshBasicMaterial}
@@ -350,7 +358,7 @@ export const Experience = () => {
 };
 
 function Ocean() {
-  const ref = useRef();
+  const ref = useRef<Water | null>(null);
   const waterNormals = useTexture("/images/waternormals.jpeg");
   waterNormals.wrapS = waterNormals.wrapT = RepeatWrapping;
   const geom = useMemo(() => new PlaneGeometry(180, 180), []);
@@ -368,7 +376,12 @@ function Ocean() {
     }),
     [waterNormals]
   );
-  useFrame((_, delta) => (ref.current.material.uniforms.time.value += delta));
+
+  useFrame((_, delta) => {
+    if (!ref.current) return;
+    ref.current.material.uniforms.time.value += delta;
+  });
+
   return (
     <water
       ref={ref}

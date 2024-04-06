@@ -19,7 +19,7 @@ type GameContext = {
   addScore: (point: number) => void;
   removePirate: (idx: number) => void;
   drownedPirate: (idx: number) => void;
-  openLeaderBoard: () => void;
+  setScreenState: (state: screen) => void;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -77,7 +77,6 @@ export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
       };
       if (randomPirate.name === undefined) return;
       setPirates((prevPirates) => [...prevPirates, randomPirate]);
-      Math.random() * 10;
     };
 
     const runTimer = () => {
@@ -96,7 +95,9 @@ export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
       runTimer();
     }
     if (timer === 0 && screenState === screen.GAME) {
+      // GAME OVER
       clearTimer();
+      // TODO: create score in db first
       setScreenState(screen.GAME_OVER);
     }
 
@@ -125,10 +126,6 @@ export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const openLeaderBoard = () => {
-    setScreenState(screen.LEADER_BOARD);
-  };
-
   const addScore = (point: number) => {
     setScore((prev) => prev + point);
   };
@@ -141,7 +138,7 @@ export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
         startGame,
         drownedPirate,
         removePirate,
-        openLeaderBoard,
+        setScreenState,
       }}
     >
       {children}
@@ -152,7 +149,7 @@ export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
 // eslint-disable-next-line react-refresh/only-export-components
 export const useGameEngine = () => {
   const context = useContext(GameEngineContext);
-  if (context === undefined) {
+  if (context === undefined || context === null) {
     throw new Error("useGameEngine must be used within a GameEngineProvider");
   }
   return context;
