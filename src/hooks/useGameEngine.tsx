@@ -15,19 +15,22 @@ type GameContext = {
   score: number;
   screenState: screen;
   pirates: Pirate[];
+  myCtx: Ctx;
   startGame: () => void;
   addScore: (point: number) => void;
   removePirate: (idx: number) => void;
   drownedPirate: (idx: number) => void;
   setScreenState: (state: screen) => void;
+  setMyCtx: (ctx: Ctx) => void;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
 export enum screen {
   MENU = "MENU",
+  LEADERBOARD = "LEADERBOARD",
   GAME = "GAME",
-  GAME_OVER = "GAME_OVER",
-  LEADER_BOARD = "LEADER_BOARD",
+  GAMEOVER = "GAMEOVER",
+  FINAL_LEADERBOARD = "FINAL_LEADERBOARD",
 }
 
 export interface Pirate {
@@ -36,6 +39,13 @@ export interface Pirate {
   point: number;
   position: THREE.Vector3;
   drowned: boolean;
+}
+
+interface Ctx {
+  id?: number;
+  player?: string;
+  score?: number;
+  createdTime?: Date;
 }
 
 const piratesList = [
@@ -51,18 +61,19 @@ const GameEngineContext = createContext<GameContext | null>(null);
 
 export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
   const [timer, setTimer] = useState(0);
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(50);
+  const [screenState, setScreenState] = useState(screen.GAMEOVER);
   const [pirates, setPirates] = useState<Pirate[]>([]);
-  const [screenState, setScreenState] = useState(screen.MENU);
+  const [myCtx, setMyCtx] = useState({});
+  const timerInterval = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const gameState = {
     timer,
     score,
     screenState,
     pirates,
+    myCtx,
   };
-
-  const timerInterval = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const generatePirate = () => {
@@ -95,10 +106,8 @@ export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
       runTimer();
     }
     if (timer === 0 && screenState === screen.GAME) {
-      // GAME OVER
       clearTimer();
-      // TODO: create score in db first
-      setScreenState(screen.GAME_OVER);
+      setScreenState(screen.GAMEOVER);
     }
 
     return clearTimer;
@@ -139,6 +148,7 @@ export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
         drownedPirate,
         removePirate,
         setScreenState,
+        setMyCtx,
       }}
     >
       {children}
