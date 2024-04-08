@@ -59,7 +59,7 @@ export const LeaderboardContainer = ({
               </div>
             </div>
           </div>
-          <div className="relative h-[55vh] overflow-y-scroll pb-4">
+          <div className="relative h-[55vh] overflow-y-scroll pb-12">
             {children}
           </div>
         </div>
