@@ -1,22 +1,27 @@
-import { Cylinder, useTexture, Text } from "@react-three/drei";
+import { Cylinder, useTexture } from "@react-three/drei";
 import {
   CylinderCollider,
   RigidBody,
   CollisionTarget,
 } from "@react-three/rapier";
-import { Pirate as IPirate, useGameEngine } from "../hooks/useGameEngine";
+import {
+  Pirate as IPirate,
+  screen,
+  useGameEngine,
+} from "../hooks/useGameEngine";
 import { Texture } from "three";
 // import { FakeGlowMaterial } from "./three/FakeGlowMaterial";
 
 export const Pirate = () => {
-  const { pirates, drownedPirate, removePirate, addScore } = useGameEngine();
+  const { pirates, drownedPirate, removePirate, addScore, screenState } =
+    useGameEngine();
 
   const handleCollisionEnter = (
     { other }: { other: CollisionTarget },
     index: number,
     point: number
   ) => {
-    if (!other.rigidBodyObject) return;
+    if (!other.rigidBodyObject || screenState !== screen.GAME) return;
 
     if (other.rigidBodyObject.name === "floor") {
       // TODO: play drowning sound
@@ -66,7 +71,7 @@ const TexturedCylinder = ({ img }: { img: string }) => {
   const texture = useTexture(img) as Texture;
 
   return (
-    <Cylinder scale={[0.5, 0.1, 0.5]} rotation={[0, Math.PI / 2, 0]}>
+    <Cylinder scale={[0.5, 0, 0.5]} rotation={[0, Math.PI / 2, 0]}>
       {/* <mesh position={[0, 2, -0.5]}>
         <sphereGeometry args={[10, 2, 0]} />
         <FakeGlowMaterial glowColor={"0xffffff"} />

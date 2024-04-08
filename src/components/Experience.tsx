@@ -39,14 +39,14 @@ declare module "@react-three/fiber" {
 
 export const Experience = () => {
   const camControl = useRef<CameraControls>(null);
-  const meshFitCameraMenu =
-    useRef<
-      Mesh<
-        BufferGeometry<NormalBufferAttributes>,
-        Material | Material[],
-        Object3DEventMap
-      >
-    >(null);
+  // const meshFitCameraMenu =
+  //   useRef<
+  //     Mesh<
+  //       BufferGeometry<NormalBufferAttributes>,
+  //       Material | Material[],
+  //       Object3DEventMap
+  //     >
+  //   >(null);
   const meshFitCameraGame =
     useRef<
       Mesh<
