@@ -370,11 +370,13 @@ export const Experience = () => {
           friction={1}
           args={[3, 5]}
         >
-          {DEBUG ? (
-            <meshStandardMaterial color="red" />
-          ) : (
-            <meshStandardMaterial transparent opacity={0} />
-          )}
+          <Box scale={[3, 5, 2]}>
+            {DEBUG ? (
+              <meshStandardMaterial color="red" />
+            ) : (
+              <meshStandardMaterial transparent opacity={0} />
+            )}
+          </Box>
         </RigidBody>
 
         {/* VOID */}
