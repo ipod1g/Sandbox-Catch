@@ -7,6 +7,7 @@ import { Button } from "../common/Button";
 import { Container } from "../common/Container";
 import { useGameActions } from "@/store/game";
 import { screen } from "@/config/game";
+import { cn } from "@/lib/utils";
 
 type LeaderboardData = {
   id: number;
@@ -70,19 +71,9 @@ export const LeaderboardContainer = ({
   );
 };
 
-const LeaderBoardTable = () => {
-  // TODO: control re-render
-  const [leaderboard, setLeaderboard] = useState<LeaderboardData[]>([]);
-
-  const leaderboardQuery = useFetch<LeaderboardData[]>(
-    "/api/v1/leaderboard",
-    undefined,
-    {
-      onSuccess: (data) => {
-        setLeaderboard(data);
-      },
-    }
-  );
+const LeaderboardContent = ({ data }: { data: LeaderboardData[] }) => {
+  const [leaderboard, setLeaderboard] = useState<LeaderboardData[]>(data);
+  const [newTop100, setNewTop100] = useState<LeaderboardData | null>(null);
 
   useEffect(() => {
     const channel = supabase
@@ -91,15 +82,12 @@ const LeaderBoardTable = () => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "leaderboard" },
         (payload) => {
-          // update only this 1 new record
-          setLeaderboard((prev) => {
-            const updatedLeaderboard = compareLeaderboard(
-              prev,
-              payload.new as LeaderboardData
-            );
-            console.log("Leaderboard updated with", payload.new);
-            return updatedLeaderboard;
-          });
+          const { updatedLeaderboard, newTop100 } = updateRealtimeLeaderboard(
+            leaderboard,
+            payload.new as LeaderboardData
+          );
+          setLeaderboard(updatedLeaderboard);
+          if (newTop100) setNewTop100(newTop100);
         }
       )
       .subscribe();
@@ -107,9 +95,49 @@ const LeaderBoardTable = () => {
     return () => {
       supabase.removeChannel(channel);
     };
+  }, [leaderboard]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setNewTop100(null);
+    }, 5000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
   }, []);
 
-  if (!leaderboard || leaderboardQuery.isLoading || !leaderboardQuery.data) {
+  return (
+    <>
+      <div
+        className={cn(
+          "fixed top-2 right-2 z-10 bg-orange-200 rounded-md px-2 border-2 border-red-400 transition-opacity duration-500",
+          newTop100 ? "opacity-100" : "opacity-0"
+        )}
+      >
+        <span className="font-nextgames uppercase text-red-400">
+          ! New Top 100 !
+        </span>
+        {newTop100 && (
+          <p className="text-red-600 font-medium mb-1 text-lg">
+            #{newTop100?.rank} {newTop100?.player}
+          </p>
+        )}
+      </div>
+      {leaderboard.map((data) => (
+        <LeaderboardRow key={data.id} data={data} />
+      ))}
+    </>
+  );
+};
+
+const LeaderBoardTable = () => {
+  const leaderboardQuery = useFetch<LeaderboardData[]>(
+    "/api/v1/leaderboard",
+    undefined
+  );
+
+  if (leaderboardQuery.isLoading || !leaderboardQuery.data) {
     return <Spinner />;
   }
 
@@ -118,11 +146,7 @@ const LeaderBoardTable = () => {
   }
 
   return (
-    <>
-      {leaderboard.map((data) => (
-        <LeaderboardRow key={data.id} data={data} />
-      ))}
-    </>
+    <LeaderboardContent data={leaderboardQuery.data as LeaderboardData[]} />
   );
 };
 
@@ -156,22 +180,54 @@ export const LeaderboardRow = ({ data }: { data: LeaderboardData }) => {
   );
 };
 
-function compareLeaderboard(
+function updateRealtimeLeaderboard(
   currentLeaderboard: LeaderboardData[],
   newPayload: LeaderboardData
 ) {
   const updatedLeaderboard = [...currentLeaderboard];
+  let insertIndex = -1;
 
   for (let i = 0; i < updatedLeaderboard.length; i++) {
-    const currentScore = updatedLeaderboard[i].score;
+    const currentData = updatedLeaderboard[i];
+    const currentScore = currentData.score;
+
     if (newPayload.score > currentScore) {
-      updatedLeaderboard.splice(i, 0, newPayload);
-      if (updatedLeaderboard.length > 100) updatedLeaderboard.pop();
+      insertIndex = i;
       break;
     }
   }
 
-  return updatedLeaderboard;
+  if (insertIndex === -1) {
+    return { updatedLeaderboard };
+  }
+
+  const newRank = updatedLeaderboard[insertIndex].rank;
+
+  // Update ranks below the new payload's position
+  for (let i = insertIndex; i < updatedLeaderboard.length; i++) {
+    const currentData = updatedLeaderboard[i];
+    currentData.rank = newRank + i - insertIndex + 1;
+  }
+  // Insert the new payload at the appropriate position
+  updatedLeaderboard.splice(insertIndex, 0, {
+    ...newPayload,
+    rank: newRank,
+  });
+
+  if (updatedLeaderboard.length > 100) {
+    updatedLeaderboard.pop();
+  }
+
+  return {
+    updatedLeaderboard,
+    newTop100: {
+      id: newPayload.id,
+      rank: newRank,
+      player: newPayload.player,
+      score: newPayload.score,
+      createdTime: newPayload.createdTime,
+    },
+  };
 }
 
 export const Leaderboard = () => {
