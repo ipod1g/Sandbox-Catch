@@ -67,6 +67,7 @@ export const ShipController = () => {
           isOnFloor.current = true;
         }}
         dominanceGroup={10}
+        lockRotations
       >
         <CuboidCollider
           args={[4.5, 2, 1.5]}
