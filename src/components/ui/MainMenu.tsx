@@ -12,7 +12,7 @@ export const MainMenu = () => {
       <ul className="flex flex-col gap-8">
         <li>
           <button
-            className="px-4 py-2 border-2 border-white text-white rounded-md shadow-md hover:border-yellow-300 hover:text-yellow-200 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 uppercase"
+            className="px-4 py-2 border-2 border-gray-600 text-white rounded-md shadow-md hover:border-yellow-300 hover:text-yellow-200 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 uppercase"
             onClick={startGame}
           >
             Start Game
@@ -21,12 +21,15 @@ export const MainMenu = () => {
         <li>
           <button
             onClick={() => setScreenState(screen.LEADERBOARD)}
-            className="px-4 py-2 border-2 border-white text-white rounded-md shadow-md hover:border-yellow-300 hover:text-yellow-200 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 uppercase"
+            className="px-4 py-2 border-2 border-gray-600 text-white rounded-md shadow-md hover:border-yellow-300 hover:text-yellow-200 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 uppercase"
           >
             LeaderBoard
           </button>
         </li>
       </ul>
+      <p className="text-sm text-gray-300">
+        &copy; {new Date().getFullYear()} Ku Bon Kwan (Bono)
+      </p>
       <div
         id="backdrop"
         className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-tr from-black via-black/20 to-transparent"
