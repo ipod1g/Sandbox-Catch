@@ -1,4 +1,4 @@
-export const DEBUG = true;
+export const DEBUG = import.meta.env.PROD ? false : true;
 export const GAME_ROUND_TIME = 60; // in seconds
 export const PIRATE_SPAWN_TIME = 2; // every n seconds
 
