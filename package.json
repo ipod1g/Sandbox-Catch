@@ -16,10 +16,12 @@
     "@supabase/supabase-js": "^2.42.0",
     "@types/three": "^0.163.0",
     "axios": "^1.6.8",
+    "clsx": "^2.1.0",
     "leva": "^0.9.35",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
+    "tailwind-merge": "^2.2.2",
     "three": "^0.163.0",
     "three-stdlib": "^2.29.6"
   },

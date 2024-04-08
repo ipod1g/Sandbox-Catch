@@ -23,6 +23,9 @@ dependencies:
   axios:
     specifier: ^1.6.8
     version: 1.6.8
+  clsx:
+    specifier: ^2.1.0
+    version: 2.1.0
   leva:
     specifier: ^0.9.35
     version: 0.9.35(@types/react-dom@18.2.24)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
@@ -35,6 +38,9 @@ dependencies:
   react-query:
     specifier: ^3.39.3
     version: 3.39.3(react-dom@18.2.0)(react@18.2.0)
+  tailwind-merge:
+    specifier: ^2.2.2
+    version: 2.2.2
   three:
     specifier: ^0.163.0
     version: 0.163.0
@@ -2059,6 +2065,11 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
+
+  /clsx@2.1.0:
+    resolution: {integrity: sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==}
+    engines: {node: '>=6'}
+    dev: false
 
   /color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
@@ -4213,6 +4224,12 @@ packages:
       react: '>=17.0'
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /tailwind-merge@2.2.2:
+    resolution: {integrity: sha512-tWANXsnmJzgw6mQ07nE3aCDkCK4QdT3ThPMCzawoYA2Pws7vSTCvz3Vrjg61jVUGfFZPJzxEP+NimbcW+EdaDw==}
+    dependencies:
+      '@babel/runtime': 7.24.4
     dev: false
 
   /tailwindcss@3.4.3:
