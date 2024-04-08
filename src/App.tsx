@@ -8,6 +8,7 @@ import { Leva } from "leva";
 import CameraPositionLogger from "./helper/CameraPositionLogger";
 import { Loading } from "./components/three/Loading";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const Controls = {
   left: "left",
   right: "right",
@@ -29,7 +30,6 @@ function App() {
       <Leva hidden={!DEBUG} collapsed />
       <KeyboardControls map={keyMap}>
         <Canvas
-          // className="!h-[36vw] !aspect-video w-screen sm:!h-screen"
           shadows
           camera={{
             position: [0, 0, 20],
