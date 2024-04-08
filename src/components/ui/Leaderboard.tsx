@@ -22,16 +22,16 @@ export const LeaderboardContainer = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="flex justify-center items-center h-full">
-      <div className="w-3/4 relative">
+      <div className="w-full mx-4 md:mx-0 md:w-3/4 max-w-screen-lg relative">
         <div className="bg-gray-800 bg-clip-padding backdrop-blur-md bg-opacity-90 h-[90vh] w-full py-8 pl-8 pr-6 rounded-lg overflow-hidden">
-          <div className="flex mb-4 gap-12 items-center">
+          <div className="flex mb-4 gap-3 md:gap-6 items-center">
             <button
               onClick={() => setScreenState(screen.MENU)}
-              className="bg-gray-800 px-4 py-2 border-2 border-gray-600 font-nextgames text-white rounded-md shadow-md hover:border-yellow-300 hover:text-yellow-200 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 uppercase"
+              className="bg-gray-800 text-sm md:text-base px-4 py-2 border-2 border-gray-600 font-nextgames text-white rounded-md shadow-md hover:border-yellow-300 hover:text-yellow-200 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 uppercase"
             >
-              Go Back
+              Back
             </button>
-            <h2 className="font-medium text-lg md:text-2xl font-nextgames uppercase">
+            <h2 className="font-medium text-lg md:text-2xl font-nextgames uppercase text-balance text-white">
               All Time High Scores
             </h2>
           </div>
@@ -39,13 +39,15 @@ export const LeaderboardContainer = ({ children }: { children: ReactNode }) => {
             <div className="ml-4">
               <div className="relative w-full h-16 flex mb-2 items-center justify-between text-md md:text-lg font-nextgames uppercase">
                 <div className="relative z-10 flex-1">
-                  <p className="text-gray-300 uppercase pr-10">Rank</p>
+                  <p className="text-gray-300 uppercase md:pr-10">Rank</p>
                 </div>
                 <div className="relative z-10 flex-1">
-                  <p className="text-gray-300 uppercase pr-10 pl-2">Player</p>
+                  <p className="text-gray-300 uppercase md:pr-10 pl-2">
+                    Player
+                  </p>
                 </div>
                 <div className="relative z-10 flex-1 flex justify-end mr-2">
-                  <p className="text-gray-300 uppercase pr-10">Score</p>
+                  <p className="text-gray-300 uppercase md:pr-10">Score</p>
                 </div>
               </div>
             </div>
