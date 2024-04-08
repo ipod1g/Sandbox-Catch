@@ -1,5 +1,6 @@
 export const DEBUG = true;
-export const GAME_TIME_ROUND = 4000;
+export const GAME_ROUND_TIME = 60; // in seconds
+export const PIRATE_SPAWN_TIME = 2; // every n seconds
 
 export enum screen {
   MENU = "MENU",

@@ -2,7 +2,8 @@ import { create } from "zustand";
 import { Vector3 } from "three";
 
 import {
-  GAME_TIME_ROUND,
+  GAME_ROUND_TIME,
+  PIRATE_SPAWN_TIME,
   initialGameState,
   piratesList,
   screen,
@@ -40,12 +41,12 @@ function getRandomPirate() {
   };
 }
 
-const useGameStore = create<StoreModel>()((set, get) => ({
+const useGameStore = create<StoreModel>()((set) => ({
   ...initialGameState,
   actions: {
     startGame: () => {
       set({
-        timer: GAME_TIME_ROUND,
+        timer: GAME_ROUND_TIME,
         score: 0,
         screenState: screen.GAME,
       });
@@ -56,7 +57,7 @@ const useGameStore = create<StoreModel>()((set, get) => ({
             return { screenState: screen.GAMEOVER };
           }
           const pirates = [...state.pirates];
-          if (state.timer % 2 === 0) {
+          if (state.timer % PIRATE_SPAWN_TIME === 0) {
             pirates.push(getRandomPirate());
           }
           return { timer: state.timer - 1, pirates };
