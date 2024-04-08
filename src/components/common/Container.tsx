@@ -6,7 +6,7 @@ const variants = {
 };
 
 const sizes = {
-  md: "mx-4 md:mx-0 w-full md:w-3/4 max-w-screen-lg h-[90vh] py-8 pl-8 pr-6",
+  md: "mx-4 my-4 md:mx-0 w-full md:w-3/4 max-w-screen-lg h-[90svh] py-8 pl-8 pr-6",
 };
 
 export type ContainerProps = React.HTMLAttributes<HTMLDivElement> & {
