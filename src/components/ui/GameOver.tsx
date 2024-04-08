@@ -1,6 +1,8 @@
 import { FormEvent, useRef } from "react";
 import { useGameEngine, screen } from "@/hooks/useGameEngine";
 import { usePost } from "@/lib/react-query";
+import { Button } from "../common/Button";
+import { Container } from "../common/Container";
 
 export const GameOver = () => {
   const { score, setScreenState, setMyCtx } = useGameEngine();
@@ -32,28 +34,20 @@ export const GameOver = () => {
 
   return (
     <div className="fixed inset-0 flex justify-center items-center">
-      <div className="w-3/4 relative">
-        <div className="bg-gray-800 bg-clip-padding backdrop-blur-md bg-opacity-90 h-[90vh] w-full p-8 rounded-lg overflow-hidden">
-          <div className="flex mb-4 justify-between items-center">
-            <button
-              onClick={() => setScreenState(screen.MENU)}
-              className="bg-gray-800 px-4 py-2 rounded-lg border-2 border-gray-600 shadow-lg"
-            >
-              Go Back
-            </button>
-            <h2 className="font-medium text-lg md:text-2xl">
-              All Time High Scores
+      <Container>
+        <form
+          onSubmit={handleSubmit}
+          className="relative w-full h-full px-4 flex flex-col items-center justify-between"
+        >
+          <div className="flex flex-col items-center justify-center mt-16">
+            <h2 className="font-medium text-lg md:text-2xl font-nextgames uppercase text-balance text-white mx-auto w-fit mt-6">
+              Your Score
             </h2>
-          </div>
-          <form
-            onSubmit={handleSubmit}
-            className="relative w-full h-full px-4 pb-20 flex flex-col items-center justify-center gap-12"
-          >
             <h2 className="text-[56px] text-yellow-300 font-nextgames">
               {score}
             </h2>
             <label className="flex flex-col items-center gap-4 text-xl">
-              Enter your name for this score
+              Enter name for this score
               <input
                 name="playerName"
                 ref={inputRef}
@@ -62,9 +56,18 @@ export const GameOver = () => {
                 className="bg-white/10 text-white rounded-md px-4 py-2"
               />
             </label>
-          </form>
-        </div>
-      </div>
+            <p className="font-light mx-2 my-6">
+              You can make new names for your new attempts
+            </p>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+          </div>
+          <p className="text-yellow-300 font-nextgames uppercase">
+            Sandbox Catch
+          </p>
+        </form>
+      </Container>
     </div>
   );
 };

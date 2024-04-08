@@ -1,4 +1,5 @@
 import { useGameEngine, screen } from "../../hooks/useGameEngine";
+import { Button } from "../common/Button";
 
 export const MainMenu = () => {
   const { startGame, setScreenState } = useGameEngine();
@@ -11,20 +12,18 @@ export const MainMenu = () => {
       </h1>
       <ul className="flex flex-col gap-8">
         <li>
-          <button
-            className="px-4 py-2 border-2 border-gray-600 text-white rounded-md shadow-md hover:border-yellow-300 hover:text-yellow-200 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 uppercase"
-            onClick={startGame}
-          >
+          <Button size="lg" variant="inverse" onClick={startGame}>
             Start Game
-          </button>
+          </Button>
         </li>
         <li>
-          <button
+          <Button
+            size="lg"
+            variant="inverse"
             onClick={() => setScreenState(screen.LEADERBOARD)}
-            className="px-4 py-2 border-2 border-gray-600 text-white rounded-md shadow-md hover:border-yellow-300 hover:text-yellow-200 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 uppercase"
           >
             LeaderBoard
-          </button>
+          </Button>
         </li>
       </ul>
       <p className="text-sm text-gray-300">
