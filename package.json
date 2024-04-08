@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ts-check": "tsc --project tsconfig.json"
   },
   "dependencies": {
     "@react-three/drei": "^9.103.1",
@@ -23,7 +24,8 @@
     "react-query": "^3.39.3",
     "tailwind-merge": "^2.2.2",
     "three": "^0.163.0",
-    "three-stdlib": "^2.29.6"
+    "three-stdlib": "^2.29.6",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
