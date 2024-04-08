@@ -1,8 +1,9 @@
-import { useGameEngine, screen } from "../../hooks/useGameEngine";
+import { useGameActions } from "@/store/game";
 import { Button } from "../common/Button";
+import { screen } from "@/config/game";
 
 export const MainMenu = () => {
-  const { startGame, setScreenState } = useGameEngine();
+  const { startGame, setScreenState } = useGameActions();
 
   return (
     <div className="fixed inset-0 text-white text-xl font-bold font-nextgames flex flex-col justify-end items-start pb-24 px-[8vw] gap-16">

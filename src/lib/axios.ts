@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { API_URL } from "../config";
+import { API_URL } from "@/config";
 
 export const instance = Axios.create({
   baseURL: API_URL,

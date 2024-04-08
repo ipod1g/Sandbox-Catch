@@ -13,7 +13,6 @@ import { Pirate } from "./Pirate";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Water } from "three-stdlib";
 import { useControls } from "leva";
-import { useGameEngine, screen } from "../hooks/useGameEngine";
 import {
   MathUtils,
   MeshBasicMaterial,
@@ -28,6 +27,8 @@ import type {
   Material,
   Object3DEventMap,
 } from "three";
+import useGameStore from "@/store/game";
+import { screen } from "@/config/game";
 
 extend({ Water });
 
@@ -56,7 +57,7 @@ export const Experience = () => {
       >
     >(null);
 
-  const { screenState } = useGameEngine();
+  const screenState = useGameStore((state) => state.screenState);
 
   const {
     maxAzimuthAngle,
@@ -97,10 +98,10 @@ export const Experience = () => {
       max: 20,
     },
     maxDistance: {
-      value: 40,
+      value: 45,
       step: 1,
       min: 16,
-      max: 40,
+      max: 50,
     },
   });
 

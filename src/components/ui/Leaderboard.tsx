@@ -1,11 +1,12 @@
 import { ReactNode, useEffect, useState } from "react";
-import { useGameEngine, screen } from "../../hooks/useGameEngine";
 import { createClient } from "@supabase/supabase-js";
 import { useFetch } from "@/lib/react-query";
 import TopRankIcon from "../leaderboard/TopRankIcon";
 import Spinner from "../common/Spinner";
 import { Button } from "../common/Button";
 import { Container } from "../common/Container";
+import { useGameActions } from "@/store/game";
+import { screen } from "@/config/game";
 
 type LeaderboardData = {
   id: number;
@@ -26,7 +27,7 @@ export const LeaderboardContainer = ({
   children: ReactNode;
   cover?: boolean;
 }) => {
-  const { setScreenState } = useGameEngine();
+  const { setScreenState } = useGameActions();
 
   return (
     <div

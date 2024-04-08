@@ -1,12 +1,14 @@
-import { useGameEngine, screen } from "@/hooks/useGameEngine";
 import { Leaderboard } from "./Leaderboard";
 import { MainMenu } from "./MainMenu";
 import { GameOverlay } from "./GameOverlay";
 import { GameOver } from "./GameOver";
 import { FinalLeaderboard } from "./FinalLeaderboard";
 
+import { screen } from "@/config/game";
+import useGameStore from "@/store/game";
+
 export const UI = () => {
-  const { screenState } = useGameEngine();
+  const screenState = useGameStore((state) => state.screenState);
 
   switch (screenState) {
     case screen.MENU:

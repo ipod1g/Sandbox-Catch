@@ -1,20 +1,19 @@
 import { Canvas } from "@react-three/fiber";
-import { Experience } from "./components/Experience";
-import { UI } from "./components/ui";
+import { Experience } from "@/components/Experience";
+import { UI } from "@/components/ui";
 import { KeyboardControls, Stats } from "@react-three/drei";
 import { Suspense, useMemo } from "react";
 import { Physics } from "@react-three/rapier";
 import { Leva } from "leva";
-import CameraPositionLogger from "./helper/CameraPositionLogger";
-import { Loading } from "./components/three/Loading";
+import CameraPositionLogger from "@/helper/CameraPositionLogger";
+import { Loading } from "@/components/three/Loading";
+import { DEBUG } from "@/config/game";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const Controls = {
   left: "left",
   right: "right",
 };
-
-const DEBUG = true;
 
 function App() {
   const keyMap = useMemo(

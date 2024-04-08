@@ -1,8 +1,8 @@
-import { useGameEngine } from "../../hooks/useGameEngine";
 import { useFetch } from "@/lib/react-query";
 import Spinner from "../common/Spinner";
 import TopRankIcon from "../leaderboard/TopRankIcon";
 import { LeaderboardContainer, LeaderboardRow } from "./Leaderboard";
+import useGameStore from "@/store/game";
 
 type LeaderboardData = {
   id: number;
@@ -12,7 +12,6 @@ type LeaderboardData = {
   rank: number;
 };
 
-// TODO: componentize
 export const FinalLeaderboard = () => {
   return (
     <div className="fixed inset-0 flex flex-col">
@@ -25,11 +24,13 @@ export const FinalLeaderboard = () => {
 };
 
 const FinalLeaderboardTable = () => {
-  const { myCtx } = useGameEngine();
+  const myCtx = useGameStore((state) => state.myCtx);
+
   const rankQuery = useFetch<LeaderboardData>("/api/v1/leaderboard/rank", {
     player: myCtx.player,
     score: myCtx.score,
   });
+
   const leaderboardQuery = useFetch<LeaderboardData[]>(
     "/api/v1/leaderboard",
     {
@@ -66,7 +67,7 @@ const FinalLeaderboardTable = () => {
 };
 
 const FinalLeaderboardUserRank = () => {
-  const { myCtx } = useGameEngine();
+  const myCtx = useGameStore((state) => state.myCtx);
   const rankQuery = useFetch<LeaderboardData>("/api/v1/leaderboard/rank", {
     player: myCtx.player,
     score: myCtx.score,

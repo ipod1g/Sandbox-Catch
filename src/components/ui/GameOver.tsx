@@ -1,11 +1,13 @@
 import { FormEvent, useRef } from "react";
-import { useGameEngine, screen } from "@/hooks/useGameEngine";
 import { usePost } from "@/lib/react-query";
 import { Button } from "../common/Button";
 import { Container } from "../common/Container";
+import useGameStore, { useGameActions } from "@/store/game";
+import { screen } from "@/config/game";
 
 export const GameOver = () => {
-  const { score, setScreenState, setMyCtx } = useGameEngine();
+  const score = useGameStore((state) => state.score);
+  const { setScreenState, setMyCtx } = useGameActions();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const mutationPost = usePost(

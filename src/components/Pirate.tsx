@@ -4,17 +4,16 @@ import {
   RigidBody,
   CollisionTarget,
 } from "@react-three/rapier";
-import {
-  Pirate as IPirate,
-  screen,
-  useGameEngine,
-} from "../hooks/useGameEngine";
+import { screen } from "@/config/game";
 import { Texture } from "three";
+import useGameStore, { useGameActions } from "@/store/game";
 // import { FakeGlowMaterial } from "./three/FakeGlowMaterial";
+import type { Pirate as TPirate } from "@/types";
 
 export const Pirate = () => {
-  const { pirates, drownedPirate, removePirate, addScore, screenState } =
-    useGameEngine();
+  const pirates = useGameStore((state) => state.pirates);
+  const screenState = useGameStore((state) => state.screenState);
+  const { addScore, drownedPirate, removePirate } = useGameActions();
 
   const handleCollisionEnter = (
     { other }: { other: CollisionTarget },
@@ -37,7 +36,7 @@ export const Pirate = () => {
 
   return (
     <group>
-      {pirates?.map((pirate: IPirate, index: number) => (
+      {pirates?.map((pirate: TPirate, index: number) => (
         <group key={pirate.name + JSON.stringify(pirate.position)}>
           <RigidBody
             restitution={0.5}
