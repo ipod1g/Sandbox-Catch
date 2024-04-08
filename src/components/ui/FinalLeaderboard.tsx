@@ -83,8 +83,8 @@ const FinalLeaderboardUserRank = () => {
   }
 
   return (
-    <div className="px-6 md:px-2 md:mx-auto w-full md:w-3/4 max-w-screen-lg -mt-4 z-20 shadow-lg">
-      <div className="h-20 bg-blue-950 border border-gray-700 shadow-md font-medium overflow-hidden rounded-md mb-2 flex items-center justify-between w-full text-white hover:text-yellow-500 transition-colors text-md md:text-lg">
+    <div className="-mt-8 px-8 md:px-2 md:mx-auto w-full md:w-3/4 max-w-screen-lg z-20">
+      <div className="px-4 h-20 bg-blue-950 border border-gray-700 shadow-md font-medium overflow-hidden rounded-md flex items-center justify-between w-full text-white hover:text-yellow-500 transition-colors text-md md:text-lg">
         <div className="relative flex-1">
           {rankQuery.data.rank > 3 ? (
             <p className="pr-1 md:pr-10 text-gray-300 ml-6">

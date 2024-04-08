@@ -39,7 +39,7 @@ export const GameOver = () => {
           onSubmit={handleSubmit}
           className="relative w-full h-full px-4 flex flex-col items-center justify-between"
         >
-          <div className="flex flex-col items-center justify-center mt-16">
+          <div className="flex flex-col items-center justify-center md:my-auto">
             <h2 className="font-medium text-lg md:text-2xl font-nextgames uppercase text-balance text-white mx-auto w-fit mt-6">
               Your Score
             </h2>

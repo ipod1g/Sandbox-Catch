@@ -19,11 +19,19 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 );
 
-export const LeaderboardContainer = ({ children }: { children: ReactNode }) => {
+export const LeaderboardContainer = ({
+  children,
+  cover,
+}: {
+  children: ReactNode;
+  cover?: boolean;
+}) => {
   const { setScreenState } = useGameEngine();
 
   return (
-    <div className="flex justify-center items-center h-full">
+    <div
+      className={`flex justify-center items-center ${cover ? "h-full" : null}`}
+    >
       <Container>
         <div className="flex mb-4 gap-3 md:gap-6 items-center">
           <Button
@@ -51,7 +59,7 @@ export const LeaderboardContainer = ({ children }: { children: ReactNode }) => {
               </div>
             </div>
           </div>
-          <div className="relative h-[70vh] overflow-y-scroll pb-10">
+          <div className="relative h-[55vh] overflow-y-scroll pb-4">
             {children}
           </div>
         </div>
@@ -175,7 +183,7 @@ function compareLeaderboard(
 export const Leaderboard = () => {
   return (
     <div className="fixed inset-0">
-      <LeaderboardContainer>
+      <LeaderboardContainer cover>
         <LeaderBoardTable />
       </LeaderboardContainer>
     </div>
