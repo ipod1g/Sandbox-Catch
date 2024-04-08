@@ -51,7 +51,7 @@ export const TouchDirectionButton = React.forwardRef<
         {...props}
       >
         <svg
-          className="w-full h-full"
+          className="w-full h-full select-none"
           width="24"
           height="24"
           viewBox="0 0 24 24"

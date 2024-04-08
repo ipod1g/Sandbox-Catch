@@ -43,7 +43,7 @@ export const LeaderboardContainer = ({
             Back
           </Button>
           <h2 className="font-medium text-lg md:text-2xl font-nextgames uppercase text-balance text-white">
-            All Time High Scores
+            Top 100 High Scores
           </h2>
         </div>
         <div className="relative">
