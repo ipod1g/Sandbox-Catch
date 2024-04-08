@@ -333,10 +333,37 @@ export const Experience = () => {
           type="fixed"
           position-y={-2}
           friction={1}
-          args={[32, 1]}
+          args={[32, 5]}
         >
           <Box scale={[32, 1, 2]}>
             <meshStandardMaterial color="skyblue" />
+          </Box>
+        </RigidBody>
+
+        {/* LEFT WALL */}
+        <RigidBody
+          name="left-wall"
+          type="fixed"
+          position={[-14.5, 1, 0]}
+          friction={1}
+          args={[3, 5]}
+        >
+          <Box scale={[3, 5, 2]}>
+            <meshStandardMaterial color="red" />
+          </Box>
+        </RigidBody>
+
+        {/* RIGHT WALL */}
+        <RigidBody
+          name="right-wall"
+          type="fixed"
+          position={[14.5, 1, 0]}
+          friction={1}
+          args={[3, 5]}
+        >
+          <Box scale={[3, 5, 2]}>
+            <meshStandardMaterial color="red" />
+            {/* <meshStandardMaterial transparent opacity={0} /> */}
           </Box>
         </RigidBody>
 
@@ -348,11 +375,10 @@ export const Experience = () => {
           </mesh>
           <CuboidCollider position={[0, -5, 0]} args={[25, 0.1, 25]} sensor />
         </RigidBody>
-
-        {/* CHARACTER */}
-        <ShipController />
-        <Pirate />
       </group>
+      {/* CHARACTER */}
+      <ShipController />
+      <Pirate />
     </>
   );
 };
