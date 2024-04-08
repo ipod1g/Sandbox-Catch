@@ -20,15 +20,18 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+html {
+  overflow: hidden;
+  width: 100svw;
+  height: 100svh;
+}
+body {
+  margin: 0;
+}
 
 #root {
   width: 100svw;
   height: 100svh;
-  overflow: hidden;
-}
-
-body {
-  margin: 0;
 }
 
 /* for scrollbar */
