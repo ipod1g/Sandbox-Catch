@@ -7,9 +7,10 @@ import {
 } from "@react-three/rapier";
 import { useRef } from "react";
 import { Controls } from "../App";
-import Ship from "./Ship";
-import { useGameEngine, screen } from "../hooks/useGameEngine";
+import Ship from "./three/Ship";
 import { Group, Object3DEventMap } from "three";
+import { screen } from "@/config/game";
+import useGameStore from "@/store/game";
 
 const MOVEMENT_SPEED = 0.8;
 const MAX_VEL = 15;
@@ -17,10 +18,17 @@ const MAX_VEL = 15;
 export const ShipController = () => {
   const leftPressed = useKeyboardControls((state) => state[Controls.left]);
   const rightPressed = useKeyboardControls((state) => state[Controls.right]);
+  const mobileLeftPressed = useGameStore(
+    (state) => state.mobileButton.leftPressed
+  );
+  const mobileRightPressed = useGameStore(
+    (state) => state.mobileButton.rightPressed
+  );
+
   const rigidbody = useRef<RapierRigidBody>(null);
   const ship = useRef<Group<Object3DEventMap>>(null);
   const isOnFloor = useRef(true);
-  const { screenState } = useGameEngine();
+  const screenState = useGameStore((state) => state.screenState);
 
   useFrame(() => {
     if (screenState !== screen.GAME) return;
@@ -31,11 +39,11 @@ export const ShipController = () => {
     if (rigidbody.current === undefined) return;
     const linvel = rigidbody.current.linvel();
     let changeRotation = false;
-    if (rightPressed && linvel.x < MAX_VEL) {
+    if ((rightPressed || mobileRightPressed) && linvel.x < MAX_VEL) {
       impulse.x += MOVEMENT_SPEED * Math.abs(impulse.x) + 0.1;
       changeRotation = true;
     }
-    if (leftPressed && linvel.x > -MAX_VEL) {
+    if ((leftPressed || mobileLeftPressed) && linvel.x > -MAX_VEL) {
       impulse.x -= MOVEMENT_SPEED * Math.abs(impulse.x) + 0.1;
       changeRotation = true;
     }
