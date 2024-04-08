@@ -94,7 +94,7 @@ const FinalLeaderboardUserRank = () => {
           </p>
         ) : (
           <>
-            <TopRankIcon rank={rankQuery.data.rank}>
+            <TopRankIcon rank={rankQuery.data.rank + 1}>
               <p className="pr-1 md:pr-10 text-gray-300 ml-6">
                 #{rankQuery.data.rank + 1}
               </p>
