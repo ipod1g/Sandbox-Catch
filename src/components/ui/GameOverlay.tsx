@@ -1,11 +1,11 @@
-import useDeviceDetection from "@/hooks/useDeviceDetection";
+import useDetectMobile from "@/hooks/useDetectMobile";
 import useGameStore, { useGameActions } from "@/store/game";
 import { TouchDirectionButton } from "@/components/common/TouchDirectionButton";
 
 export const GameOverlay = () => {
   const score = useGameStore((state) => state.score);
   const timer = useGameStore((state) => state.timer);
-  const device = useDeviceDetection();
+  const { isMobile } = useDetectMobile();
   const { setMobileButton } = useGameActions();
 
   return (
@@ -28,7 +28,7 @@ export const GameOverlay = () => {
           </div>
         </div>
       </div>
-      {device !== "Desktop" ? (
+      {isMobile ? (
         <div className="fixed bottom-24 w-full flex justify-around">
           <TouchDirectionButton
             rotation="left"
@@ -45,7 +45,7 @@ export const GameOverlay = () => {
             Right
           </TouchDirectionButton>
         </div>
-      ) : undefined}
+      ) : null}
     </>
   );
 };
