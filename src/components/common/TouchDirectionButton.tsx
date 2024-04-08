@@ -42,7 +42,7 @@ export const TouchDirectionButton = React.forwardRef<
       <button
         ref={ref}
         className={cn(
-          "flex justify-center items-center disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none transition-colors",
+          "flex justify-center items-center disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none transition-colors select-none",
           rotations[rotation],
           variants[variant],
           sizes[size],
