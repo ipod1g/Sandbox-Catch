@@ -337,7 +337,11 @@ export const Experience = () => {
           args={[32, 5]}
         >
           <Box scale={[32, 1, 2]}>
-            <meshStandardMaterial color="skyblue" />
+            {DEBUG ? (
+              <meshStandardMaterial color="skyblue" />
+            ) : (
+              <meshStandardMaterial transparent opacity={0} />
+            )}
           </Box>
         </RigidBody>
 
@@ -350,7 +354,11 @@ export const Experience = () => {
           args={[3, 5]}
         >
           <Box scale={[3, 5, 2]}>
-            <meshStandardMaterial color="red" />
+            {DEBUG ? (
+              <meshStandardMaterial color="red" />
+            ) : (
+              <meshStandardMaterial transparent opacity={0} />
+            )}
           </Box>
         </RigidBody>
 
@@ -362,13 +370,14 @@ export const Experience = () => {
           friction={1}
           args={[3, 5]}
         >
-          <Box scale={[3, 5, 2]}>
+          {DEBUG ? (
             <meshStandardMaterial color="red" />
-            {/* <meshStandardMaterial transparent opacity={0} /> */}
-          </Box>
+          ) : (
+            <meshStandardMaterial transparent opacity={0} />
+          )}
         </RigidBody>
 
-        {/* Void */}
+        {/* VOID */}
         <RigidBody colliders={false} type="fixed" name="void">
           <mesh position={[0, -5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
             <planeGeometry args={[50, 50]} />
@@ -377,6 +386,7 @@ export const Experience = () => {
           <CuboidCollider position={[0, -5, 0]} args={[25, 0.1, 25]} sensor />
         </RigidBody>
       </group>
+
       {/* CHARACTER */}
       <ShipController />
       <Pirate />
