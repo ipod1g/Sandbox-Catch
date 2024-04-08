@@ -61,8 +61,8 @@ const GameEngineContext = createContext<GameContext | null>(null);
 
 export const GameEngineProvider = ({ children }: { children: ReactNode }) => {
   const [timer, setTimer] = useState(0);
-  const [score, setScore] = useState(50);
-  const [screenState, setScreenState] = useState(screen.GAMEOVER);
+  const [score, setScore] = useState(0);
+  const [screenState, setScreenState] = useState(screen.MENU);
   const [pirates, setPirates] = useState<Pirate[]>([]);
   const [myCtx, setMyCtx] = useState({});
   const timerInterval = useRef<NodeJS.Timeout | undefined>(undefined);
