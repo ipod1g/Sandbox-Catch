@@ -10,6 +10,7 @@ import { screen } from "@/config/game";
 
 type LeaderboardData = {
   id: number;
+  rank: number;
   player: string;
   score: number;
   createdTime: Date;
@@ -118,37 +119,29 @@ const LeaderBoardTable = () => {
 
   return (
     <>
-      {leaderboard.map((data, idx) => (
-        <LeaderboardRow
-          key={JSON.stringify(data) + idx}
-          data={data}
-          rank={idx + 1}
-        />
+      {leaderboard.map((data) => (
+        <LeaderboardRow key={data.id} data={data} />
       ))}
     </>
   );
 };
 
-export const LeaderboardRow = ({
-  data,
-  rank,
-}: {
-  data: LeaderboardData;
-  rank: number;
-}) => {
+export const LeaderboardRow = ({ data }: { data: LeaderboardData }) => {
   return (
     <div
       className={`${
-        rank > 3 ? "h-16" : "h-20 bg-[#21213d] border border-gray-700 shadow-md"
+        data.rank > 3
+          ? "h-16"
+          : "h-20 bg-[#21213d] border border-gray-700 shadow-md"
       } font-medium overflow-hidden rounded-md mb-2 flex items-center justify-between w-full hover:opacity-70 transition-opacity text-md md:text-lg`}
     >
       <div className="relative flex-1">
-        {rank > 3 ? (
-          <p className="pr-1 md:pr-10 text-gray-300 ml-6">#{rank}</p>
+        {data.rank > 3 ? (
+          <p className="pr-1 md:pr-10 text-gray-300 ml-6">#{data.rank}</p>
         ) : (
           <>
-            <TopRankIcon rank={rank}>
-              <p className="pr-1 md:pr-10 text-white ml-6">#{rank}</p>
+            <TopRankIcon rank={data.rank}>
+              <p className="pr-1 md:pr-10 text-white ml-6">#{data.rank}</p>
             </TopRankIcon>
           </>
         )}

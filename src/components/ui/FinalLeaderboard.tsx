@@ -31,8 +31,7 @@ const FinalLeaderboardTable = () => {
   const myCtx = useGameStore((state) => state.myCtx);
 
   const rankQuery = useFetch<LeaderboardData>("/api/v1/leaderboard/rank", {
-    player: myCtx.player,
-    score: myCtx.score,
+    id: myCtx.id,
   });
 
   const leaderboardQuery = useFetch<LeaderboardData[]>(
@@ -41,7 +40,7 @@ const FinalLeaderboardTable = () => {
       range: 100,
     },
     {
-      enabled: rankQuery.isSuccess,
+      enabled: !!rankQuery.data,
     }
   );
 
@@ -57,12 +56,8 @@ const FinalLeaderboardTable = () => {
 
   return (
     <>
-      {leaderboardQuery.data.map((data, idx) => (
-        <LeaderboardRow
-          key={data.player + data.score}
-          data={data}
-          rank={idx + 1}
-        />
+      {leaderboardQuery.data.map((data) => (
+        <LeaderboardRow key={data.id} data={data} />
       ))}
     </>
   );
@@ -70,9 +65,9 @@ const FinalLeaderboardTable = () => {
 
 const FinalLeaderboardUserRank = () => {
   const myCtx = useGameStore((state) => state.myCtx);
+
   const rankQuery = useFetch<LeaderboardData>("/api/v1/leaderboard/rank", {
-    player: myCtx.player,
-    score: myCtx.score,
+    id: myCtx.id,
   });
 
   if (rankQuery.isLoading) {
@@ -90,13 +85,13 @@ const FinalLeaderboardUserRank = () => {
       <div className="relative flex-1">
         {rankQuery.data.rank > 3 ? (
           <p className="pr-1 md:pr-10 text-gray-300 ml-6">
-            #{rankQuery.data.rank + 1}
+            #{rankQuery.data.rank}
           </p>
         ) : (
           <>
-            <TopRankIcon rank={rankQuery.data.rank + 1}>
+            <TopRankIcon rank={rankQuery.data.rank}>
               <p className="pr-1 md:pr-10 text-gray-300 ml-6">
-                #{rankQuery.data.rank + 1}
+                #{rankQuery.data.rank}
               </p>
             </TopRankIcon>
           </>
@@ -104,12 +99,12 @@ const FinalLeaderboardUserRank = () => {
       </div>
       <div className="relative flex-1">
         <p className="pr-1 md:pr-10 ml-6">
-          {rankQuery.data.player} <span className="text-yellow-300">(YOU)</span>
+          {myCtx.player} <span className="text-yellow-300">(YOU)</span>
         </p>
       </div>
       <div className="relative flex-1 flex justify-end">
         <p className="pr-3 md:pr-10 text-white ml-6 text-right">
-          {rankQuery.data.score}
+          {myCtx.score}
         </p>
       </div>
     </>
