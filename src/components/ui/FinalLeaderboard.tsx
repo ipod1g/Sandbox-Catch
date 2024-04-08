@@ -40,7 +40,7 @@ const FinalLeaderboardTable = () => {
       range: 100,
     },
     {
-      enabled: !!rankQuery.data,
+      enabled: !!rankQuery.data || !!rankQuery.error,
     }
   );
 

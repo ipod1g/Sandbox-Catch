@@ -22,6 +22,16 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 );
 
+export const Leaderboard = () => {
+  return (
+    <div className="fixed inset-0">
+      <LeaderboardContainer cover>
+        <LeaderBoardTable />
+      </LeaderboardContainer>
+    </div>
+  );
+};
+
 export const LeaderboardContainer = ({
   children,
   cover,
@@ -72,6 +82,8 @@ export const LeaderboardContainer = ({
 };
 
 const LeaderboardContent = ({ data }: { data: LeaderboardData[] }) => {
+  console.log(data);
+
   const [leaderboard, setLeaderboard] = useState<LeaderboardData[]>(data);
   const [newTop100, setNewTop100] = useState<LeaderboardData | null>(null);
 
@@ -146,7 +158,10 @@ const LeaderBoardTable = () => {
   }
 
   return (
-    <LeaderboardContent data={leaderboardQuery.data as LeaderboardData[]} />
+    <LeaderboardContent
+      key={leaderboardQuery.data.length}
+      data={leaderboardQuery.data}
+    />
   );
 };
 
@@ -229,13 +244,3 @@ function updateRealtimeLeaderboard(
     },
   };
 }
-
-export const Leaderboard = () => {
-  return (
-    <div className="fixed inset-0">
-      <LeaderboardContainer cover>
-        <LeaderBoardTable />
-      </LeaderboardContainer>
-    </div>
-  );
-};
