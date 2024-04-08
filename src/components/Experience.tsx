@@ -28,7 +28,7 @@ import type {
   Object3DEventMap,
 } from "three";
 import useGameStore from "@/store/game";
-import { screen } from "@/config/game";
+import { screen, DEBUG } from "@/config/game";
 
 extend({ Water });
 
@@ -108,14 +108,12 @@ export const Experience = () => {
   const camConfig = useControls("Camera", {
     menuPos: {
       value: [-16, 17, 14],
-      // value: [-18, 17, 14],
       step: 1,
       min: -50,
       max: 50,
     },
     menuTarget: {
       value: [-4, 7, 2],
-      // value: [-11, 7, 2],
       step: 1,
       min: -50,
       max: 50,
@@ -316,15 +314,17 @@ export const Experience = () => {
       <BackgroundPanel />
 
       {/* SPAWNING ZONE TEST */}
-      <mesh position={[0, 22, 0]} visible={true}>
-        <boxGeometry
-          // the y gives the restriction for landscape windows
-          // the x gives the restriction for portrait windows
-          args={[testConfig.spawnSize[0], testConfig.spawnSize[1], 1]}
-        />
-        <meshBasicMaterial color="green" transparent opacity={0.3} />
-      </mesh>
-      {/* <Rig /> */}
+      {DEBUG && (
+        <mesh position={[0, 22, 0]} visible={true}>
+          <boxGeometry
+            // the y gives the restriction for landscape windows
+            // the x gives the restriction for portrait windows
+            args={[testConfig.spawnSize[0], testConfig.spawnSize[1], 1]}
+          />
+          <meshBasicMaterial color="green" transparent opacity={0.3} />
+        </mesh>
+      )}
+
       <Ocean />
 
       <group position-y={-0.5}>

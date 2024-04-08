@@ -13,13 +13,13 @@ export const GameOverlay = () => {
       <div className="fixed bottom-0 ml-4 md:right-0 md:mr-10 mb-4 font-nextgames text-gray-400 uppercase md:text-xl pointer-events-none">
         <div className="bg-gray-800 px-4 py-2 rounded-xl border-2 border-gray-600 shadow-lg">
           <div className="flex gap-8 items-end">
-            <p>
+            <p className="select-none">
               Score:{" "}
               <span className="tracking-wider text-yellow-300 text-base md:text-[28px]">
                 {score}
               </span>
             </p>
-            <p>
+            <p className="select-none">
               Time:{" "}
               <span className="tracking-wider text-yellow-300 text-base md:text-[28px]">
                 {timer}

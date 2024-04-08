@@ -54,6 +54,7 @@ export const GameOver = () => {
                 name="playerName"
                 ref={inputRef}
                 type="text"
+                required
                 placeholder="Player Name"
                 className="bg-white/10 text-white rounded-md px-4 py-2"
               />
