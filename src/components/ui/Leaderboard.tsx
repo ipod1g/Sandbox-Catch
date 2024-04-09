@@ -113,7 +113,7 @@ const LeaderboardContent = ({
     if (newTop100) {
       const timeout = setTimeout(() => {
         setNewTop100(null);
-      }, 5000);
+      }, 8000);
 
       return () => clearTimeout(timeout);
     }
@@ -174,7 +174,9 @@ export const LeaderboardRow = ({ data }: { data: LeaderboardData }) => {
         data.rank > 3
           ? " h-16"
           : "h-20 bg-[#21213d] border border-gray-700 shadow-md",
-        newTop100?.id === data.id ? "bg-orange-300/60 border-orange-300" : null
+        newTop100?.id === data.id
+          ? "bg-blue-950 border-gray-700 shadow-md"
+          : null
       )}
     >
       <div className="relative flex-1">
