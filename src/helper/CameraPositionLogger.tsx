@@ -11,7 +11,7 @@ function CameraPositionLogger({ event }: { event: string }) {
       const roundedX = Math.round(x * 100) / 100;
       const roundedY = Math.round(y * 100) / 100;
       const roundedZ = Math.round(z * 100) / 100;
-      console.log(
+      console.debug(
         `Camera position: x: ${roundedX}, y: ${roundedY}, z: ${roundedZ}`
       );
     };

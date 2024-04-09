@@ -29,8 +29,6 @@ const ScoreText = () => {
     }
   });
 
-  console.log("ScoreText rendered", scoreMessage, opacity);
-
   return (
     <Text
       color={scoreMessage.includes("-") ? "red" : "yellow"}
