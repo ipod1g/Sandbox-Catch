@@ -1,5 +1,8 @@
 # Sandbox-Catch
-![sandbox-catch-demo-v1](https://github.com/ipod1g/Sandbox-Catch/assets/105120582/e4094e73-d2dc-4c3e-a77b-cbfd3071abed)
+
+![screenshot](https://github.com/ipod1g/Sandbox-Catch/assets/105120582/0868a88e-2b35-4b58-9c3c-cf4e3efff832)
+
+Try the [Demo](https://sandbox-catch.vercel.app/) !
 
 - 3D catch game where your ship have to board the falling pirates from the sky but avoid the bad pirates! Some are evil and will ruin your ship!
 
@@ -20,6 +23,8 @@ The leaderboard from the main menu will show **real time** top 100 scores - if a
 
 ## 🗄️ Architecture
 
+![image](https://github.com/ipod1g/Sandbox-Catch/assets/105120582/6d68a124-dbf6-4fc1-934b-571c95a14847)
+
 ## Requirements of the application
 
 ### Catch game
@@ -38,7 +43,16 @@ The leaderboard from the main menu will show **real time** top 100 scores - if a
 - [x] The application will display the top 100 players in real time.
 - [x] Each rank shows the player’s score and name.
 
+
 ![sandbox-catch-demo-v1-realtime](https://github.com/ipod1g/Sandbox-Catch/assets/105120582/e58a2457-bb98-4d75-904e-cdf6eec6a61f)
+
+
+### Additional features
+- Notify new top100 entry if you are at the leaderboard screen
+- Responsive UI
+- Pause game when window loses focus
+- Wavy motion, ocean and clouds
+- Loading UIs
 
 ---
 
