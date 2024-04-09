@@ -1,8 +1,11 @@
 import { useFetch } from "@/lib/react-query";
 import Spinner from "@/components/common/Spinner";
-import TopRankIcon from "@/components/leaderboard/TopRankIcon";
-import { LeaderboardContainer, LeaderboardRow } from "./Leaderboard";
+import {
+  LeaderboardContainer,
+  LeaderboardRow,
+} from "@/components/leaderboard/Leaderboard";
 import useGameStore from "@/store/game";
+import PlayerRankDisplay from "@/components/leaderboard/PlayerRankDisplay";
 
 type LeaderboardData = {
   id: number;
@@ -12,7 +15,7 @@ type LeaderboardData = {
   rank: number;
 };
 
-export const FinalLeaderboard = () => {
+export const GameOverLeaderboard = () => {
   return (
     <div className="fixed inset-0 flex flex-col">
       <LeaderboardContainer>
@@ -81,32 +84,10 @@ const FinalLeaderboardUserRank = () => {
   }
 
   return (
-    <>
-      <div className="relative flex-1">
-        {rankQuery.data.rank > 3 ? (
-          <p className="pr-1 md:pr-10 text-gray-300 ml-6">
-            #{rankQuery.data.rank}
-          </p>
-        ) : (
-          <>
-            <TopRankIcon rank={rankQuery.data.rank}>
-              <p className="pr-1 md:pr-10 text-gray-300 ml-6">
-                #{rankQuery.data.rank}
-              </p>
-            </TopRankIcon>
-          </>
-        )}
-      </div>
-      <div className="relative flex-1">
-        <p className="pr-1 md:pr-10 ml-6">
-          {myCtx.player} <span className="text-yellow-300">(YOU)</span>
-        </p>
-      </div>
-      <div className="relative flex-1 flex justify-end">
-        <p className="pr-3 md:pr-10 text-white ml-6 text-right">
-          {myCtx.score}
-        </p>
-      </div>
-    </>
+    <PlayerRankDisplay
+      rank={rankQuery.data.rank}
+      player={rankQuery.data.player}
+      score={rankQuery.data.score}
+    />
   );
 };

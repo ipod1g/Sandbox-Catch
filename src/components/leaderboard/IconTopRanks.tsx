@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-const TopRankIcon = ({
+const IconTopRanks = ({
   rank,
   children,
 }: {
@@ -136,4 +136,4 @@ const TopRankIcon = ({
   );
 };
 
-export default TopRankIcon;
+export default IconTopRanks;

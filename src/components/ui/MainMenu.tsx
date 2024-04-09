@@ -1,6 +1,7 @@
 import { useGameActions } from "@/store/game";
 import { Button } from "@/components/common/Button";
 import { screen } from "@/config/game";
+import IconGithub from "../common/IconGithub";
 
 export const MainMenu = () => {
   const { startGame, setScreenState } = useGameActions();
@@ -27,9 +28,16 @@ export const MainMenu = () => {
           </Button>
         </li>
       </ul>
-      <p className="text-sm text-gray-300">
-        &copy; {new Date().getFullYear()} Ku Bon Kwan (Bono)
-      </p>
+      <a
+        href="https://github.com/ipod1g"
+        target="_blank"
+        rel="noreferrer noopener"
+        className="text-sm text-gray-300 flex items-center gap-2 uppercase hover:text-yellow-300 transition-colors"
+      >
+        {" "}
+        <IconGithub className="w-6 h-6" />
+        {new Date().getFullYear()} Ku Bon Kwan (Bono){" "}
+      </a>
       <div
         id="backdrop"
         className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-tr from-black via-black/20 to-transparent"

@@ -1,13 +1,13 @@
-import { Leaderboard } from "./Leaderboard";
 import { MainMenu } from "./MainMenu";
 import { GameOverlay } from "./GameOverlay";
 import { GameOver } from "./GameOver";
-import { FinalLeaderboard } from "./FinalLeaderboard";
+import { GameOverLeaderboard } from "./GameOverLeaderboard";
 
 import { screen } from "@/config/game";
 import useGameStore, { useGameActions } from "@/store/game";
 import { usePageVisibility } from "@/hooks/usePageVisibility";
 import { useEffect } from "react";
+import { RealtimeLeaderboard } from "./RealtimeLeaderboard";
 
 export const UIManager = () => {
   const screenState = useGameStore((state) => state.screenState);
@@ -28,13 +28,14 @@ export const UIManager = () => {
     case screen.MENU:
       return <MainMenu />;
     case screen.LEADERBOARD:
-      return <Leaderboard />;
+      return <RealtimeLeaderboard />;
     case screen.GAME:
       return <GameOverlay />;
     case screen.GAMEOVER:
       return <GameOver />;
     case screen.FINAL_LEADERBOARD:
-      return <FinalLeaderboard />;
+      return <GameOverLeaderboard />;
+    // TODO: add one for the pause screen
 
     default:
       return <MainMenu />;
