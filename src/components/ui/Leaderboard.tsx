@@ -1,21 +1,15 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useFetch } from "@/lib/react-query";
 import TopRankIcon from "../leaderboard/TopRankIcon";
 import Spinner from "../common/Spinner";
 import { Button } from "../common/Button";
 import { Container } from "../common/Container";
-import { useGameActions } from "@/store/game";
+import useGameStore, { useGameActions } from "@/store/game";
 import { screen } from "@/config/game";
 import { cn } from "@/lib/utils";
-
-type LeaderboardData = {
-  id: number;
-  rank: number;
-  player: string;
-  score: number;
-  createdTime: Date;
-};
+import { LeaderboardData } from "@/types";
+import { useQueryClient } from "react-query";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || "",
@@ -81,11 +75,14 @@ export const LeaderboardContainer = ({
   );
 };
 
-const LeaderboardContent = ({ data }: { data: LeaderboardData[] }) => {
-  console.log(data);
-
-  const [leaderboard, setLeaderboard] = useState<LeaderboardData[]>(data);
-  const [newTop100, setNewTop100] = useState<LeaderboardData | null>(null);
+const LeaderboardContent = ({
+  leaderboardData,
+}: {
+  leaderboardData: LeaderboardData[];
+}) => {
+  const newTop100 = useGameStore((state) => state.newTop100);
+  const { setNewTop100 } = useGameActions();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const channel = supabase
@@ -95,11 +92,14 @@ const LeaderboardContent = ({ data }: { data: LeaderboardData[] }) => {
         { event: "INSERT", schema: "public", table: "leaderboard" },
         (payload) => {
           const { updatedLeaderboard, newTop100 } = updateRealtimeLeaderboard(
-            leaderboard,
-            payload.new as LeaderboardData
+            leaderboardData,
+            payload.new as Omit<LeaderboardData, "rank">
           );
-          setLeaderboard(updatedLeaderboard);
-          if (newTop100) setNewTop100(newTop100);
+          queryClient.setQueryData(
+            ["/api/v1/leaderboard", null],
+            updatedLeaderboard
+          );
+          setNewTop100(newTop100);
         }
       )
       .subscribe();
@@ -107,36 +107,38 @@ const LeaderboardContent = ({ data }: { data: LeaderboardData[] }) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [leaderboard]);
+  }, [leaderboardData, queryClient, setNewTop100]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setNewTop100(null);
-    }, 5000);
+    if (newTop100) {
+      const timeout = setTimeout(() => {
+        setNewTop100(null);
+      }, 5000);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
+      return () => clearTimeout(timeout);
+    }
+  }, [newTop100, setNewTop100]);
 
   return (
     <>
       <div
         className={cn(
-          "fixed top-2 right-2 z-10 bg-orange-200 rounded-md px-2 border-2 border-red-400 transition-opacity duration-500",
+          "fixed top-2 right-2 z-10 bg-orange-200 rounded-md px-2 border-2 border-red-400 transition-opacity duration-300",
           newTop100 ? "opacity-100" : "opacity-0"
         )}
       >
         <span className="font-nextgames uppercase text-red-400">
           ! New Top 100 !
         </span>
-        {newTop100 && (
-          <p className="text-red-600 font-medium mb-1 text-lg">
-            #{newTop100?.rank} {newTop100?.player}
-          </p>
-        )}
+        <div className="h-[28px]">
+          {newTop100 && (
+            <p className="text-red-600 font-medium mb-1 text-lg">
+              #{newTop100?.rank} {newTop100?.player}
+            </p>
+          )}
+        </div>
       </div>
-      {leaderboard.map((data) => (
+      {leaderboardData.map((data) => (
         <LeaderboardRow key={data.id} data={data} />
       ))}
     </>
@@ -144,10 +146,7 @@ const LeaderboardContent = ({ data }: { data: LeaderboardData[] }) => {
 };
 
 const LeaderBoardTable = () => {
-  const leaderboardQuery = useFetch<LeaderboardData[]>(
-    "/api/v1/leaderboard",
-    undefined
-  );
+  const leaderboardQuery = useFetch<LeaderboardData[]>("/api/v1/leaderboard");
 
   if (leaderboardQuery.isLoading || !leaderboardQuery.data) {
     return <Spinner />;
@@ -159,37 +158,41 @@ const LeaderBoardTable = () => {
 
   return (
     <LeaderboardContent
-      key={leaderboardQuery.data.length}
-      data={leaderboardQuery.data}
+      key={JSON.stringify(leaderboardQuery.data)}
+      leaderboardData={leaderboardQuery.data}
     />
   );
 };
 
 export const LeaderboardRow = ({ data }: { data: LeaderboardData }) => {
+  const newTop100 = useGameStore((state) => state.newTop100);
+
   return (
     <div
-      className={`${
+      className={cn(
+        "font-medium overflow-hidden rounded-md mb-2 flex items-center justify-between w-full hover:opacity-70 text-md md:text-lg transition-all duration-300",
         data.rank > 3
-          ? "h-16"
-          : "h-20 bg-[#21213d] border border-gray-700 shadow-md"
-      } font-medium overflow-hidden rounded-md mb-2 flex items-center justify-between w-full hover:opacity-70 transition-opacity text-md md:text-lg`}
+          ? " h-16"
+          : "h-20 bg-[#21213d] border border-gray-700 shadow-md",
+        newTop100?.id === data.id ? "bg-orange-300/60 border-orange-300" : null
+      )}
     >
       <div className="relative flex-1">
         {data.rank > 3 ? (
-          <p className="pr-1 md:pr-10 text-gray-300 ml-6">#{data.rank}</p>
+          <p className="pr-1 md:pr-10 ml-6">#{data.rank}</p>
         ) : (
           <>
             <TopRankIcon rank={data.rank}>
-              <p className="pr-1 md:pr-10 text-white ml-6">#{data.rank}</p>
+              <p className="pr-1 md:pr-10 ml-6">#{data.rank}</p>
             </TopRankIcon>
           </>
         )}
       </div>
       <div className="relative flex-1">
-        <p className="pr-1 md:pr-10 text-white ml-6">{data.player}</p>
+        <p className="pr-1 md:pr-10 ml-6 text-white">{data.player}</p>
       </div>
       <div className="relative flex-1 flex justify-end">
-        <p className="pr-3 md:pr-10 text-white ml-6 text-right">{data.score}</p>
+        <p className="pr-3 md:pr-10 ml-6 text-right">{data.score}</p>
       </div>
     </div>
   );
@@ -197,7 +200,7 @@ export const LeaderboardRow = ({ data }: { data: LeaderboardData }) => {
 
 function updateRealtimeLeaderboard(
   currentLeaderboard: LeaderboardData[],
-  newPayload: LeaderboardData
+  newPayload: Omit<LeaderboardData, "rank">
 ) {
   const updatedLeaderboard = [...currentLeaderboard];
   let insertIndex = -1;
@@ -206,28 +209,27 @@ function updateRealtimeLeaderboard(
     const currentData = updatedLeaderboard[i];
     const currentScore = currentData.score;
 
-    if (newPayload.score > currentScore) {
+    if (newPayload.score >= currentScore) {
       insertIndex = i;
       break;
     }
   }
 
   if (insertIndex === -1) {
-    return { updatedLeaderboard };
+    return {
+      updatedLeaderboard,
+      newTop100: null,
+    };
   }
 
-  const newRank = updatedLeaderboard[insertIndex].rank;
-
-  // Update ranks below the new payload's position
-  for (let i = insertIndex; i < updatedLeaderboard.length; i++) {
-    const currentData = updatedLeaderboard[i];
-    currentData.rank = newRank + i - insertIndex + 1;
-  }
-  // Insert the new payload at the appropriate position
   updatedLeaderboard.splice(insertIndex, 0, {
+    rank: insertIndex + 1,
     ...newPayload,
-    rank: newRank,
   });
+
+  for (let i = insertIndex + 1; i < updatedLeaderboard.length; i++) {
+    updatedLeaderboard[i].rank += 1;
+  }
 
   if (updatedLeaderboard.length > 100) {
     updatedLeaderboard.pop();
@@ -235,12 +237,15 @@ function updateRealtimeLeaderboard(
 
   return {
     updatedLeaderboard,
-    newTop100: {
-      id: newPayload.id,
-      rank: newRank,
-      player: newPayload.player,
-      score: newPayload.score,
-      createdTime: newPayload.createdTime,
-    },
+    newTop100:
+      insertIndex < 100
+        ? {
+            id: newPayload.id,
+            rank: insertIndex + 1, // Adjust rank to be 1-based for display.
+            player: newPayload.player,
+            score: newPayload.score,
+            createdTime: newPayload.createdTime,
+          }
+        : null,
   };
 }

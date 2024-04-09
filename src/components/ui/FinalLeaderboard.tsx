@@ -30,9 +30,9 @@ export const FinalLeaderboard = () => {
 const FinalLeaderboardTable = () => {
   const myCtx = useGameStore((state) => state.myCtx);
 
-  const rankQuery = useFetch<LeaderboardData>("/api/v1/leaderboard/rank", {
-    id: myCtx.id,
-  });
+  const rankQuery = useFetch<LeaderboardData>(
+    `/api/v1/leaderboard/rank/${myCtx.id}`
+  );
 
   const leaderboardQuery = useFetch<LeaderboardData[]>(
     "/api/v1/leaderboard",
@@ -66,9 +66,9 @@ const FinalLeaderboardTable = () => {
 const FinalLeaderboardUserRank = () => {
   const myCtx = useGameStore((state) => state.myCtx);
 
-  const rankQuery = useFetch<LeaderboardData>("/api/v1/leaderboard/rank", {
-    id: myCtx.id,
-  });
+  const rankQuery = useFetch<LeaderboardData>(
+    `/api/v1/leaderboard/rank/${myCtx.id}`
+  );
 
   if (rankQuery.isLoading) {
     return <Spinner />;

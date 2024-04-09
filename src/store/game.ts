@@ -8,7 +8,7 @@ import {
   piratesList,
   screen,
 } from "@/config/game";
-import { Ctx, Pirate } from "@/types";
+import { Ctx, LeaderboardData, Pirate } from "@/types";
 
 interface StoreModel {
   timer: number;
@@ -20,6 +20,7 @@ interface StoreModel {
     rightPressed: boolean;
   };
   myCtx: Ctx;
+  newTop100: LeaderboardData | null;
   actions: {
     startGame: () => void;
     addScore: (point: number) => void;
@@ -28,6 +29,7 @@ interface StoreModel {
     setScreenState: (state: screen) => void;
     setMyCtx: (ctx: Ctx) => void;
     setMobileButton: (button: "left" | "right", pressed: boolean) => void;
+    setNewTop100: (data: LeaderboardData | null) => void;
   };
 }
 
@@ -95,6 +97,9 @@ const useGameStore = create<StoreModel>()((set) => ({
         };
         return { mobileButton };
       });
+    },
+    setNewTop100: (data) => {
+      set({ newTop100: data });
     },
   },
 }));

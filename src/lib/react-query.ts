@@ -13,21 +13,20 @@ const queryConfig: DefaultOptions = {
   queries: {
     useErrorBoundary: true,
     refetchOnWindowFocus: false,
-    retry: false,
+    retry: 2,
   },
 };
-
+// TODO: sometimes config doesn't work
 export const queryClient = new QueryClient({ defaultOptions: queryConfig });
 
-export const fetcher = <T>({
+export const fetcher = async <T>({
   queryKey,
   pageParam,
 }: QueryFunctionContext<QueryKeyT>): Promise<T> => {
   const [url, params] = queryKey;
 
-  return instance
-    .get<T>(url, { params: { ...params, pageParam } })
-    .then((res) => res.data);
+  const res = await instance.get<T>(url, { params: { ...params, pageParam } });
+  return res.data;
 };
 
 export const usePrefetch = <T>(url: string | null, params?: object) => {
@@ -55,6 +54,8 @@ export const useFetch = <T>(
     ({ queryKey }) => fetcher({ queryKey, meta: {} }),
     {
       enabled: !!url,
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 30,
       ...config,
     }
   );

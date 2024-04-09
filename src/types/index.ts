@@ -22,3 +22,11 @@ export type GameContext = {
   pirates: Pirate[];
   myCtx: Ctx;
 };
+
+export type LeaderboardData = {
+  id: number;
+  rank: number;
+  player: string;
+  score: number;
+  createdTime: Date;
+};

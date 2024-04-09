@@ -20,6 +20,7 @@ export const initialGameState = {
     rightPressed: false,
   },
   myCtx: {},
+  newTop100: null,
 };
 
 export const piratesList = [
