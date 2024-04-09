@@ -1,25 +1,12 @@
-import {
-  Box,
-  CameraControls,
-  Cloud,
-  Clouds,
-  Sky,
-  useTexture,
-} from "@react-three/drei";
-import { Object3DNode, extend, useFrame } from "@react-three/fiber";
+import { Box, CameraControls, Cloud, Clouds, Sky } from "@react-three/drei";
+import { Object3DNode, extend } from "@react-three/fiber";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { ShipController } from "@/components/three/ShipController";
 import { Pirate } from "@/components/three/Pirate";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Water } from "three-stdlib";
 import { useControls } from "leva";
-import {
-  MathUtils,
-  MeshBasicMaterial,
-  PlaneGeometry,
-  RepeatWrapping,
-  Vector3,
-} from "three";
+import { MathUtils, MeshBasicMaterial } from "three";
 import type {
   Mesh,
   BufferGeometry,
@@ -29,6 +16,8 @@ import type {
 } from "three";
 import useGameStore from "@/store/game";
 import { screen, DEBUG } from "@/config/game";
+import Ocean from "@/components/three/Ocean";
+import BackgroundPanel from "@/components/three/BackgroundPanel";
 
 extend({ Water });
 
@@ -40,14 +29,6 @@ declare module "@react-three/fiber" {
 
 export const Experience = () => {
   const camControl = useRef<CameraControls>(null);
-  // const meshFitCameraMenu =
-  //   useRef<
-  //     Mesh<
-  //       BufferGeometry<NormalBufferAttributes>,
-  //       Material | Material[],
-  //       Object3DEventMap
-  //     >
-  //   >(null);
   const meshFitCameraGame =
     useRef<
       Mesh<
@@ -312,6 +293,7 @@ export const Experience = () => {
       </mesh>
 
       <BackgroundPanel />
+      <Ocean />
 
       {/* SPAWNING ZONE TEST */}
       {DEBUG && (
@@ -324,8 +306,6 @@ export const Experience = () => {
           <meshBasicMaterial color="green" transparent opacity={0.3} />
         </mesh>
       )}
-
-      <Ocean />
 
       <group position-y={-0.5}>
         {/* STAGE */}
@@ -391,60 +371,9 @@ export const Experience = () => {
 
       {/* CHARACTER */}
       <ShipController />
+
+      {/* DROPPING PIRATES */}
       <Pirate />
     </>
   );
 };
-
-function Ocean() {
-  const ref = useRef<Water | null>(null);
-  const waterNormals = useTexture("/images/waternormals.jpeg");
-  waterNormals.wrapS = waterNormals.wrapT = RepeatWrapping;
-  const geom = useMemo(() => new PlaneGeometry(180, 180), []);
-  const config = useMemo(
-    () => ({
-      textureWidth: 512,
-      textureHeight: 512,
-      waterNormals,
-      sunDirection: new Vector3(),
-      sunColor: 0x5cc8cd,
-      waterColor: 0x2fa7af,
-      // waterColor: 0x001e0f,
-      distortionScale: 3.7,
-      fog: true,
-    }),
-    [waterNormals]
-  );
-
-  useFrame((_, delta) => {
-    if (!ref.current) return;
-    ref.current.material.uniforms.time.value += delta;
-  });
-
-  return (
-    <water
-      ref={ref}
-      args={[geom, config]}
-      rotation-x={-Math.PI / 2}
-      position={[0, -0.5, 0]}
-    />
-  );
-}
-
-function BackgroundPanel({ children }: { children?: React.ReactNode }) {
-  const texture = useTexture("/images/bg1.png");
-
-  return (
-    <mesh position={[0, 10, -13]} rotation={[0, 0, 0]}>
-      <planeGeometry args={[64, 32]} />
-      <meshBasicMaterial
-        map={texture}
-        // transparent
-        // opacity={0}
-      />
-      {children}
-    </mesh>
-  );
-}
-
-useTexture.preload("/images/bg1.png");
