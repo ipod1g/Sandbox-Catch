@@ -57,7 +57,9 @@ const useGameStore = create<StoreModel>()((set, get) => ({
         clearInterval(gameInterval);
         gameInterval = null;
       }
-      set({ screenState: screen.PAUSE });
+      if (get().screenState === screen.GAME) {
+        set({ screenState: screen.PAUSE });
+      }
     },
     resumeGame: () => {
       const { screenState, timer } = get();
