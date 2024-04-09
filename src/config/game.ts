@@ -7,12 +7,15 @@ export enum screen {
   LEADERBOARD = "LEADERBOARD",
   GAME = "GAME",
   GAMEOVER = "GAMEOVER",
+  PAUSE = "PAUSE",
   FINAL_LEADERBOARD = "FINAL_LEADERBOARD",
 }
 
 export const initialGameState = {
   timer: 0,
   score: 0,
+  scoreMessage: "",
+  scoreUpdateCounter: 0,
   screenState: screen.MENU,
   pirates: [],
   mobileButton: {

@@ -5,10 +5,24 @@ import { GameOver } from "./GameOver";
 import { FinalLeaderboard } from "./FinalLeaderboard";
 
 import { screen } from "@/config/game";
-import useGameStore from "@/store/game";
+import useGameStore, { useGameActions } from "@/store/game";
+import { usePageVisibility } from "@/hooks/usePageVisibility";
+import { useEffect } from "react";
 
 export const UIManager = () => {
   const screenState = useGameStore((state) => state.screenState);
+  const isVisible = usePageVisibility();
+  const { pauseGame, resumeGame } = useGameActions();
+
+  useEffect(() => {
+    if (isVisible) {
+      resumeGame();
+      console.log("Game resumed");
+    } else {
+      pauseGame();
+      console.log("Game paused");
+    }
+  }, [isVisible, pauseGame, resumeGame]);
 
   switch (screenState) {
     case screen.MENU:

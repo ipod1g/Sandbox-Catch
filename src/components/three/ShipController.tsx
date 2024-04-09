@@ -1,4 +1,4 @@
-import { useKeyboardControls } from "@react-three/drei";
+import { Billboard, useKeyboardControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import {
   CuboidCollider,
@@ -11,6 +11,7 @@ import Ship from "./Ship";
 import { Group, Object3DEventMap } from "three";
 import { screen } from "@/config/game";
 import useGameStore from "@/store/game";
+import ScoreText from "./ScoreText";
 
 const MOVEMENT_SPEED = 0.8;
 const MAX_VEL = 15;
@@ -29,6 +30,7 @@ export const ShipController = () => {
   const ship = useRef<Group<Object3DEventMap>>(null);
   const isOnFloor = useRef(true);
   const screenState = useGameStore((state) => state.screenState);
+  const scoreUpdateCounter = useGameStore((state) => state.scoreUpdateCounter);
 
   useFrame(() => {
     if (screenState !== screen.GAME) return;
@@ -85,6 +87,15 @@ export const ShipController = () => {
         <group ref={ship}>
           <Ship />
         </group>
+        <Billboard
+          position={[0, 9, 3]}
+          follow={true}
+          lockX={false}
+          lockY={false}
+          lockZ={false}
+        >
+          <ScoreText key={scoreUpdateCounter} />
+        </Billboard>
       </RigidBody>
     </group>
   );
