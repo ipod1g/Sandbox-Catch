@@ -86,8 +86,8 @@ const FinalLeaderboardUserRank = () => {
   return (
     <PlayerRankDisplay
       rank={rankQuery.data.rank}
-      player={rankQuery.data.player}
-      score={rankQuery.data.score}
+      player={myCtx.player ?? "Unknown"}
+      score={myCtx.score ?? 0}
     />
   );
 };
