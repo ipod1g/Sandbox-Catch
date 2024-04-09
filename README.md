@@ -8,6 +8,7 @@ Try the [Demo](https://sandbox-catch.vercel.app/) !
 
 - Playable on both desktop and mobile devices!
 
+Time spent coding: **~6 days**
 ## 👁️ Instruction
 
 ### How to play
