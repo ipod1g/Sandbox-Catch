@@ -1,5 +1,6 @@
-import * as React from "react";
 import { cn } from "@/utils";
+
+import type * as React from "react";
 
 const variants = {
   glass: "bg-gray-800 bg-clip-padding backdrop-blur-md bg-opacity-90 ",

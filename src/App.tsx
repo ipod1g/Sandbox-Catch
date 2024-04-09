@@ -1,13 +1,14 @@
-import { Canvas } from "@react-three/fiber";
-import { Experience } from "@/components/three/Experience";
-import { UIManager } from "@/components/ui";
 import { KeyboardControls, Stats } from "@react-three/drei";
-import { Suspense, useMemo } from "react";
+import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import { Leva } from "leva";
-import CameraPositionLogger from "@/helper/CameraPositionLogger";
+import { Suspense, useMemo } from "react";
+
+import { Experience } from "@/components/three/Experience";
 import { Loading } from "@/components/three/Loading";
+import { UIManager } from "@/components/ui";
 import { DEBUG } from "@/config/game";
+import CameraPositionLogger from "@/helper/CameraPositionLogger";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const Controls = {
@@ -26,16 +27,16 @@ function App() {
 
   return (
     <>
-      <Leva hidden={!DEBUG} collapsed />
+      <Leva collapsed hidden={!DEBUG} />
       <KeyboardControls map={keyMap}>
         <Canvas
-          shadows
           camera={{
             position: [0, 0, 20],
             fov: 40,
             near: 0.1,
             far: 1000,
           }}
+          shadows
         >
           {DEBUG ? (
             <>
@@ -43,7 +44,7 @@ function App() {
               <Stats />
             </>
           ) : undefined}
-          <color attach="background" args={["#ececec"]} />
+          <color args={["#ececec"]} attach="background" />
           {/* <fog attach="fog" args={["#2fa7af", 10, 80]} /> */}
           <Suspense fallback={<Loading />}>
             <Physics debug={DEBUG}>

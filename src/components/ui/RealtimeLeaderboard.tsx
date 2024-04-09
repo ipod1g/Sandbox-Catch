@@ -1,16 +1,18 @@
-import { useFetch } from "@/lib/react-query";
-import useGameStore, { useGameActions } from "@/store/game";
-import { LeaderboardData } from "@/types";
-import { cn } from "@/utils";
+import { createClient } from "@supabase/supabase-js";
 import { useEffect } from "react";
 import { useQueryClient } from "react-query";
-import Spinner from "../common/Spinner";
+
+import Spinner from "@/components/common/Spinner";
+import { updateRealtimeLeaderboard } from "@/components/leaderboard/functions";
 import {
   LeaderboardContainer,
   LeaderboardRow,
-} from "../leaderboard/Leaderboard";
-import { updateRealtimeLeaderboard } from "../leaderboard/functions";
-import { createClient } from "@supabase/supabase-js";
+} from "@/components/leaderboard/Leaderboard";
+import { useFetch } from "@/lib/react-query";
+import useGameStore, { useGameActions } from "@/store/game";
+import { cn } from "@/utils";
+
+import type { LeaderboardData } from "@/types";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || "",
@@ -110,7 +112,7 @@ const LeaderboardContent = ({
         </div>
       </div>
       {leaderboardData.map((data) => (
-        <LeaderboardRow key={data.id} data={data} />
+        <LeaderboardRow data={data} key={data.id} />
       ))}
     </>
   );

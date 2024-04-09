@@ -1,5 +1,8 @@
-import * as React from "react";
+import { forwardRef } from "react";
+
 import { cn } from "@/utils";
+
+import type { ButtonHTMLAttributes } from "react";
 
 const variants = {
   primary:
@@ -17,17 +20,14 @@ const rotations = {
   right: "transform rotate-90",
 };
 
-export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
   rotation?: keyof typeof rotations;
   className?: string;
 };
 
-export const TouchDirectionButton = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps
->(
+export const TouchDirectionButton = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       className = "",
@@ -40,7 +40,6 @@ export const TouchDirectionButton = React.forwardRef<
   ) => {
     return (
       <button
-        ref={ref}
         className={cn(
           "flex justify-center items-center disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none transition-colors select-none",
           rotations[rotation],
@@ -48,14 +47,15 @@ export const TouchDirectionButton = React.forwardRef<
           sizes[size],
           className
         )}
+        ref={ref}
         {...props}
       >
         <svg
           className="w-full h-full select-none"
-          width="24"
+          fill="none"
           height="24"
           viewBox="0 0 24 24"
-          fill="none"
+          width="24"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path

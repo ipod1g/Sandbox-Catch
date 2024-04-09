@@ -1,6 +1,7 @@
 import { useTexture } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
+
 import type { Group, Object3DEventMap } from "three";
 
 export const Loading = () => {

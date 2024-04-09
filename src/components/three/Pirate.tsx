@@ -1,12 +1,11 @@
 import { Cylinder, useTexture } from "@react-three/drei";
-import {
-  CylinderCollider,
-  RigidBody,
-  CollisionTarget,
-} from "@react-three/rapier";
+import { CylinderCollider, RigidBody } from "@react-three/rapier";
+
 import { screen } from "@/config/game";
 import useGameStore, { useGameActions } from "@/store/game";
+
 import type { Pirate as TPirate } from "@/types";
+import type { CollisionTarget } from "@react-three/rapier";
 
 export const Pirate = () => {
   const pirates = useGameStore((state) => state.pirates);
@@ -37,8 +36,8 @@ export const Pirate = () => {
       {pirates?.map((pirate: TPirate, index: number) => (
         <group key={pirate.name + JSON.stringify(pirate.position)}>
           <RigidBody
-            restitution={0.5}
             colliders={false}
+            gravityScale={0.25}
             onCollisionEnter={(e) =>
               handleCollisionEnter(e, index, pirate.point)
             }
@@ -49,8 +48,8 @@ export const Pirate = () => {
               }
             }}
             position={pirate.position}
+            restitution={0.5}
             rotation={[Math.PI / 2, 0, 0]}
-            gravityScale={0.25}
           >
             <CylinderCollider args={[0.25 / 2, 0.5]} />
             <TexturedCylinder img={pirate.img} points={pirate.point} />
@@ -69,12 +68,12 @@ const TexturedCylinder = ({ img, points }: { img: string; points: number }) => {
   return (
     <>
       {/* Faux Outline */}
-      <Cylinder scale={[0.5, 0, 0.5]} rotation={[0, Math.PI / 2, 0]}>
+      <Cylinder rotation={[0, Math.PI / 2, 0]} scale={[0.5, 0, 0.5]}>
         <meshBasicMaterial attach="material" color={outlineColor} />
       </Cylinder>
 
       {/* Main Textured Cylinder */}
-      <Cylinder scale={[0.5, 0.05, 0.5]} rotation={[0, Math.PI / 2, 0]}>
+      <Cylinder rotation={[0, Math.PI / 2, 0]} scale={[0.5, 0.05, 0.5]}>
         <meshBasicMaterial map={texture} transparent />
       </Cylinder>
     </>

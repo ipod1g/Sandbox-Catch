@@ -1,12 +1,16 @@
 import { Box, CameraControls, Cloud, Clouds, Sky } from "@react-three/drei";
-import { Object3DNode, extend } from "@react-three/fiber";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
-import { ShipController } from "@/components/three/ShipController";
-import { Pirate } from "@/components/three/Pirate";
-import { useCallback, useEffect, useRef } from "react";
-import { Water } from "three-stdlib";
 import { useControls } from "leva";
+import { useCallback, useEffect, useRef } from "react";
 import { MathUtils, MeshBasicMaterial } from "three";
+
+import BackgroundPanel from "@/components/three/BackgroundPanel";
+import Ocean from "@/components/three/Ocean";
+import { Pirate } from "@/components/three/Pirate";
+import { ShipController } from "@/components/three/ShipController";
+import { screen, DEBUG } from "@/config/game";
+import useGameStore from "@/store/game";
+
 import type {
   Mesh,
   BufferGeometry,
@@ -14,18 +18,6 @@ import type {
   Material,
   Object3DEventMap,
 } from "three";
-import useGameStore from "@/store/game";
-import { screen, DEBUG } from "@/config/game";
-import Ocean from "@/components/three/Ocean";
-import BackgroundPanel from "@/components/three/BackgroundPanel";
-
-extend({ Water });
-
-declare module "@react-three/fiber" {
-  interface ThreeElements {
-    water: Object3DNode<Water, typeof Water>;
-  }
-}
 
 export const Experience = () => {
   const camControl = useRef<CameraControls>(null);
@@ -231,25 +223,25 @@ export const Experience = () => {
     <>
       <CameraControls
         makeDefault
-        ref={camControl}
-        maxPolarAngle={MathUtils.DEG2RAD * maxPolarAngle}
-        minPolarAngle={MathUtils.DEG2RAD * minPolarAngle}
         maxAzimuthAngle={MathUtils.DEG2RAD * maxAzimuthAngle}
+        maxDistance={maxDistance}
+        maxPolarAngle={MathUtils.DEG2RAD * maxPolarAngle}
         minAzimuthAngle={MathUtils.DEG2RAD * minAzimuthAngle}
         minDistance={minDistance}
-        maxDistance={maxDistance}
+        minPolarAngle={MathUtils.DEG2RAD * minPolarAngle}
         onEnd={() => {
           fitCamera();
         }}
+        ref={camControl}
       />
 
       {/* LIGHTS */}
       <ambientLight intensity={1} />
       <directionalLight
-        position={[5, 5, 5]}
-        intensity={0.8}
-        // castShadow
         color={"#a5d6ff"}
+        intensity={0.8}
+        position={[5, 5, 5]}
+        // castShadow
       />
 
       {/* BACKGROUND */}
@@ -279,7 +271,7 @@ export const Experience = () => {
         />
       </Clouds>
 
-      <mesh ref={meshFitCameraGame} position={[0, 5, 0]} visible={false}>
+      <mesh position={[0, 5, 0]} ref={meshFitCameraGame} visible={false}>
         <boxGeometry
           // the y gives the restriction for landscape windows
           // the x gives the restriction for portrait windows
@@ -289,7 +281,7 @@ export const Experience = () => {
             testConfig.viewSize[2],
           ]}
         />
-        <meshBasicMaterial color="red" transparent opacity={0.3} />
+        <meshBasicMaterial color="red" opacity={0.3} transparent />
       </mesh>
 
       <BackgroundPanel />
@@ -303,69 +295,69 @@ export const Experience = () => {
             // the x gives the restriction for portrait windows
             args={[testConfig.spawnSize[0], testConfig.spawnSize[1], 1]}
           />
-          <meshBasicMaterial color="green" transparent opacity={0.3} />
+          <meshBasicMaterial color="green" opacity={0.3} transparent />
         </mesh>
       )}
 
       <group position-y={-0.5}>
         {/* STAGE */}
         <RigidBody
-          name="floor"
-          type="fixed"
-          position-y={-2}
-          friction={1}
           args={[32, 5]}
+          friction={1}
+          name="floor"
+          position-y={-2}
+          type="fixed"
         >
           <Box scale={[32, 1, 2]}>
             {DEBUG ? (
               <meshStandardMaterial color="skyblue" />
             ) : (
-              <meshStandardMaterial transparent opacity={0} />
+              <meshStandardMaterial opacity={0} transparent />
             )}
           </Box>
         </RigidBody>
 
         {/* LEFT WALL */}
         <RigidBody
-          name="left-wall"
-          type="fixed"
-          position={[-14.5, 1, 0]}
-          friction={1}
           args={[3, 5]}
+          friction={1}
+          name="left-wall"
+          position={[-14.5, 1, 0]}
+          type="fixed"
         >
           <Box scale={[3, 5, 2]}>
             {DEBUG ? (
               <meshStandardMaterial color="red" />
             ) : (
-              <meshStandardMaterial transparent opacity={0} />
+              <meshStandardMaterial opacity={0} transparent />
             )}
           </Box>
         </RigidBody>
 
         {/* RIGHT WALL */}
         <RigidBody
-          name="right-wall"
-          type="fixed"
-          position={[14.5, 1, 0]}
-          friction={1}
           args={[3, 5]}
+          friction={1}
+          name="right-wall"
+          position={[14.5, 1, 0]}
+          type="fixed"
         >
           <Box scale={[3, 5, 2]}>
             {DEBUG ? (
               <meshStandardMaterial color="red" />
             ) : (
-              <meshStandardMaterial transparent opacity={0} />
+              <meshStandardMaterial opacity={0} transparent />
             )}
           </Box>
         </RigidBody>
 
         {/* VOID */}
-        <RigidBody colliders={false} type="fixed" name="void">
+        <RigidBody colliders={false} name="void" type="fixed">
           <mesh position={[0, -5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
             <planeGeometry args={[50, 50]} />
             <meshBasicMaterial color="#000000" toneMapped={false} />
           </mesh>
-          <CuboidCollider position={[0, -5, 0]} args={[25, 0.1, 25]} sensor />
+          <CuboidCollider args={[25, 0.1, 25]} position={[0, -5, 0]} sensor />
         </RigidBody>
       </group>
 

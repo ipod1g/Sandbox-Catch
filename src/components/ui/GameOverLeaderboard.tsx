@@ -1,11 +1,11 @@
-import { useFetch } from "@/lib/react-query";
 import Spinner from "@/components/common/Spinner";
 import {
   LeaderboardContainer,
   LeaderboardRow,
 } from "@/components/leaderboard/Leaderboard";
-import useGameStore from "@/store/game";
 import PlayerRankDisplay from "@/components/leaderboard/PlayerRankDisplay";
+import { useFetch } from "@/lib/react-query";
+import useGameStore from "@/store/game";
 
 type LeaderboardData = {
   id: number;
@@ -60,7 +60,7 @@ const FinalLeaderboardTable = () => {
   return (
     <>
       {leaderboardQuery.data.map((data) => (
-        <LeaderboardRow key={data.id} data={data} />
+        <LeaderboardRow data={data} key={data.id} />
       ))}
     </>
   );
@@ -85,8 +85,8 @@ const FinalLeaderboardUserRank = () => {
 
   return (
     <PlayerRankDisplay
-      rank={rankQuery.data.rank}
       player={myCtx.player ?? "Unknown"}
+      rank={rankQuery.data.rank}
       score={myCtx.score ?? 0}
     />
   );

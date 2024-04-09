@@ -1,11 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  QueryClient,
+} from "react-query";
 
 import { instance } from "@/lib/axios";
 
 import type { AxiosError, AxiosResponse } from "axios";
 import type { UseQueryOptions, DefaultOptions } from "react-query";
 import type { QueryFunctionContext } from "react-query/types/core/types";
-import { QueryClient } from "react-query";
 
 type QueryKeyT = [string, object | undefined];
 

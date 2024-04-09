@@ -2,6 +2,10 @@ export const DEBUG = import.meta.env.PROD ? false : true;
 export const GAME_ROUND_TIME = 60; // in seconds
 export const PIRATE_SPAWN_TIME = 2; // every n seconds
 
+// Ship variables
+export const SHIP_MOVEMENT_SPEED = 0.8;
+export const SHIP_MAX_VEL = 15;
+
 export enum screen {
   MENU = "MENU",
   LEADERBOARD = "LEADERBOARD",

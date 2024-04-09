@@ -1,5 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import { useRef } from "react";
+
 import type { GroupProps } from "@react-three/fiber";
 import type { Group, Object3DEventMap } from "three";
 
@@ -9,7 +10,7 @@ export default function Ship(props: GroupProps) {
 
   return (
     <group ref={group} {...props}>
-      <group scale={0.64} position={[0, 3.5, 0]}>
+      <group position={[0, 3.5, 0]} scale={0.64}>
         <primitive object={scene} />
       </group>
     </group>

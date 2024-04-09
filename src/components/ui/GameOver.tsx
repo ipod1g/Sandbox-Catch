@@ -1,9 +1,12 @@
-import { FormEvent, useRef } from "react";
-import { usePost } from "@/lib/react-query";
+import { useRef } from "react";
+
 import { Button } from "@/components/common/Button";
 import { Container } from "@/components/common/Container";
-import useGameStore, { useGameActions } from "@/store/game";
 import { screen } from "@/config/game";
+import { usePost } from "@/lib/react-query";
+import useGameStore, { useGameActions } from "@/store/game";
+
+import type { FormEvent } from "react";
 
 export const GameOver = () => {
   const score = useGameStore((state) => state.score);
@@ -38,8 +41,8 @@ export const GameOver = () => {
     <div className="fixed inset-0 flex justify-center items-center">
       <Container>
         <form
-          onSubmit={handleSubmit}
           className="relative w-full h-full px-4 flex flex-col items-center justify-between"
+          onSubmit={handleSubmit}
         >
           <div className="flex flex-col items-center justify-center md:my-auto">
             <h2 className="font-medium text-lg md:text-2xl font-nextgames uppercase text-balance text-white mx-auto w-fit mt-6">
@@ -51,18 +54,18 @@ export const GameOver = () => {
             <label className="flex flex-col items-center gap-4 text-xl">
               Enter name for this score
               <input
-                name="playerName"
-                ref={inputRef}
-                type="text"
-                required
-                placeholder="Player Name"
                 className="bg-white/10 text-white rounded-md px-4 py-2"
+                name="playerName"
+                placeholder="Player Name"
+                ref={inputRef}
+                required
+                type="text"
               />
             </label>
             <p className="font-light mx-2 my-6">
               You can make new names for your new attempts
             </p>
-            <Button variant="primary" type="submit">
+            <Button type="submit" variant="primary">
               Submit
             </Button>
           </div>

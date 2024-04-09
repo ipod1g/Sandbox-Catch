@@ -1,6 +1,7 @@
-import { useRef, useState, useEffect } from "react";
-import { useFrame } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useRef, useState, useEffect } from "react";
+
 import useGameStore from "@/store/game";
 
 const FADE_DURATION = 1; // Duration of the fade effect in seconds
@@ -31,13 +32,13 @@ const ScoreText = () => {
 
   return (
     <Text
-      color={scoreMessage.includes("-") ? "red" : "yellow"}
       anchorX="center"
       anchorY="middle"
-      fontWeight="bold"
-      fontSize={1.5}
-      font="/fonts/NEXTGAMES.ttf"
+      color={scoreMessage.includes("-") ? "red" : "yellow"}
       fillOpacity={opacity}
+      font="/fonts/NEXTGAMES.ttf"
+      fontSize={1.5}
+      fontWeight="bold"
     >
       {scoreMessage}
     </Text>

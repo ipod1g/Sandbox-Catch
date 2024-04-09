@@ -1,20 +1,17 @@
 import { Billboard, useKeyboardControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import {
-  CuboidCollider,
-  RapierRigidBody,
-  RigidBody,
-} from "@react-three/rapier";
+import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { useRef } from "react";
-import { Controls } from "@/App";
-import Ship from "./Ship";
-import { Group, Object3DEventMap } from "three";
-import { screen } from "@/config/game";
-import useGameStore from "@/store/game";
-import ScoreText from "./ScoreText";
 
-const MOVEMENT_SPEED = 0.8;
-const MAX_VEL = 15;
+import { Controls } from "@/App";
+import { SHIP_MAX_VEL, SHIP_MOVEMENT_SPEED, screen } from "@/config/game";
+import useGameStore from "@/store/game";
+
+import ScoreText from "./ScoreText";
+import Ship from "./Ship";
+
+import type { RapierRigidBody } from "@react-three/rapier";
+import type { Group, Object3DEventMap } from "three";
 
 export const ShipController = () => {
   const leftPressed = useKeyboardControls((state) => state[Controls.left]);
@@ -41,12 +38,12 @@ export const ShipController = () => {
     if (rigidbody.current === undefined) return;
     const linvel = rigidbody.current.linvel();
     let changeRotation = false;
-    if ((rightPressed || mobileRightPressed) && linvel.x < MAX_VEL) {
-      impulse.x += MOVEMENT_SPEED * Math.abs(impulse.x) + 0.1;
+    if ((rightPressed || mobileRightPressed) && linvel.x < SHIP_MAX_VEL) {
+      impulse.x += SHIP_MOVEMENT_SPEED * Math.abs(impulse.x) + 0.1;
       changeRotation = true;
     }
-    if ((leftPressed || mobileLeftPressed) && linvel.x > -MAX_VEL) {
-      impulse.x -= MOVEMENT_SPEED * Math.abs(impulse.x) + 0.1;
+    if ((leftPressed || mobileLeftPressed) && linvel.x > -SHIP_MAX_VEL) {
+      impulse.x -= SHIP_MOVEMENT_SPEED * Math.abs(impulse.x) + 0.1;
       changeRotation = true;
     }
 
@@ -69,30 +66,30 @@ export const ShipController = () => {
   return (
     <group>
       <RigidBody
-        name="ship"
-        ref={rigidbody}
         colliders={false}
-        scale={[0.5, 0.5, 0.5]}
+        dominanceGroup={10}
+        lockRotations
+        name="ship"
         onCollisionEnter={() => {
           isOnFloor.current = true;
         }}
-        dominanceGroup={10}
-        lockRotations
+        ref={rigidbody}
+        scale={[0.5, 0.5, 0.5]}
       >
         <CuboidCollider
           args={[4.5, 2, 1.5]}
-          position={[0, 2, 0]}
           density={0.02}
+          position={[0, 2, 0]}
         />
         <group ref={ship}>
           <Ship />
         </group>
         <Billboard
-          position={[0, 9, 3]}
           follow={true}
           lockX={false}
           lockY={false}
           lockZ={false}
+          position={[0, 9, 3]}
         >
           <ScoreText key={scoreUpdateCounter} />
         </Billboard>

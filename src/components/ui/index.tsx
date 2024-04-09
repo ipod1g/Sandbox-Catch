@@ -1,12 +1,13 @@
-import { MainMenu } from "./MainMenu";
-import { GameOverlay } from "./GameOverlay";
-import { GameOver } from "./GameOver";
-import { GameOverLeaderboard } from "./GameOverLeaderboard";
+import { useEffect } from "react";
 
 import { screen } from "@/config/game";
-import useGameStore, { useGameActions } from "@/store/game";
 import { usePageVisibility } from "@/hooks/usePageVisibility";
-import { useEffect } from "react";
+import useGameStore, { useGameActions } from "@/store/game";
+
+import { GameOver } from "./GameOver";
+import { GameOverlay } from "./GameOverlay";
+import { GameOverLeaderboard } from "./GameOverLeaderboard";
+import { MainMenu } from "./MainMenu";
 import { RealtimeLeaderboard } from "./RealtimeLeaderboard";
 
 export const UIManager = () => {

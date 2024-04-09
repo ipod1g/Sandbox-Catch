@@ -1,5 +1,5 @@
-import type { Vector3 } from "three";
 import type { screen } from "@/config/game";
+import type { Vector3 } from "three";
 
 export type Pirate = {
   name: string;

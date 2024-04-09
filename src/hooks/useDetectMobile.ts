@@ -1,7 +1,7 @@
-import React from "react";
+import { useEffect, useState } from "react";
 
 export default function useDetectMobile() {
-  const [isMobile, setMobile] = React.useState<boolean | undefined>(undefined);
+  const [isMobile, setMobile] = useState<boolean | undefined>(undefined);
   const detectMobile = () => {
     const userAgent =
       typeof window.navigator === "undefined" ? "" : navigator.userAgent;
@@ -13,7 +13,7 @@ export default function useDetectMobile() {
     setMobile(mobile);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     detectMobile();
 
     window.addEventListener("resize", detectMobile);

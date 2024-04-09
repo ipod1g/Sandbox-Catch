@@ -1,5 +1,8 @@
-import * as React from "react";
+import { forwardRef } from "react";
+
 import { cn } from "@/utils";
+
+import type { ReactElement, ButtonHTMLAttributes } from "react";
 
 const variants = {
   primary:
@@ -16,16 +19,16 @@ const sizes = {
 };
 
 type IconProps =
-  | { startIcon: React.ReactElement; endIcon?: never }
-  | { endIcon: React.ReactElement; startIcon?: never }
+  | { startIcon: ReactElement; endIcon?: never }
+  | { endIcon: ReactElement; startIcon?: never }
   | { endIcon?: undefined; startIcon?: undefined };
 
-export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
 } & IconProps;
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       type = "button",
@@ -40,14 +43,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     return (
       <button
-        ref={ref}
-        type={type}
         className={cn(
           "flex justify-center items-center disabled:opacity-70 disabled:cursor-not-allowed rounded-md shadow-sm font-medium focus:outline-none transition-colors uppercase font-nextgames",
           variants[variant],
           sizes[size],
           className
         )}
+        ref={ref}
+        type={type}
         {...props}
       >
         {startIcon}

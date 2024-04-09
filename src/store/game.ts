@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import { Vector3 } from "three";
+import { create } from "zustand";
 
 import {
   GAME_ROUND_TIME,
@@ -8,7 +8,8 @@ import {
   piratesList,
   screen,
 } from "@/config/game";
-import { Ctx, LeaderboardData, Pirate } from "@/types";
+
+import type { Ctx, LeaderboardData, Pirate } from "@/types";
 
 interface StoreModel {
   timer: number;

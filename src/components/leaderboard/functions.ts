@@ -1,4 +1,4 @@
-import { LeaderboardData } from "@/types";
+import type { LeaderboardData } from "@/types";
 
 export function updateRealtimeLeaderboard(
   currentLeaderboard: LeaderboardData[],

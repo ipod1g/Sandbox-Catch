@@ -1,8 +1,18 @@
 import { useTexture } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { extend, useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import { RepeatWrapping, PlaneGeometry, Vector3 } from "three";
 import { Water } from "three-stdlib";
+
+import type { Object3DNode } from "@react-three/fiber";
+
+extend({ Water });
+
+declare module "@react-three/fiber" {
+  interface ThreeElements {
+    water: Object3DNode<Water, typeof Water>;
+  }
+}
 
 export default function Ocean() {
   const ref = useRef<Water | null>(null);
@@ -31,10 +41,10 @@ export default function Ocean() {
 
   return (
     <water
-      ref={ref}
       args={[geom, config]}
-      rotation-x={-Math.PI / 2}
       position={[0, -0.5, 0]}
+      ref={ref}
+      rotation-x={-Math.PI / 2}
     />
   );
 }

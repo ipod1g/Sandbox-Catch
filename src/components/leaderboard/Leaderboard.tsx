@@ -1,11 +1,12 @@
-import { ReactNode } from "react";
-import IconTopRanks from "@/components/leaderboard/IconTopRanks";
 import { Button } from "@/components/common/Button";
 import { Container } from "@/components/common/Container";
-import useGameStore, { useGameActions } from "@/store/game";
+import IconTopRanks from "@/components/leaderboard/IconTopRanks";
 import { screen } from "@/config/game";
+import useGameStore, { useGameActions } from "@/store/game";
 import { cn } from "@/utils";
-import { LeaderboardData } from "@/types";
+
+import type { LeaderboardData } from "@/types";
+import type { ReactNode } from "react";
 
 const LeaderboardContainer = ({
   children,
@@ -23,9 +24,9 @@ const LeaderboardContainer = ({
       <Container>
         <div className="flex mb-4 gap-3 md:gap-6 items-center">
           <Button
-            variant="primary"
-            size="sm"
             onClick={() => setScreenState(screen.MENU)}
+            size="sm"
+            variant="primary"
           >
             Back
           </Button>
