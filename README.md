@@ -2,6 +2,8 @@
 
 ![screenshot](https://github.com/ipod1g/Sandbox-Catch/assets/105120582/0868a88e-2b35-4b58-9c3c-cf4e3efff832)
 
+Try the [Demo](https://sandbox-catch.vercel.app/) !
+
 - 3D catch game where your ship have to board the falling pirates from the sky but avoid the bad pirates! Some are evil and will ruin your ship!
 
 - Playable on both desktop and mobile devices!
