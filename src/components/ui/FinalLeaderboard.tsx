@@ -1,6 +1,6 @@
 import { useFetch } from "@/lib/react-query";
-import Spinner from "../common/Spinner";
-import TopRankIcon from "../leaderboard/TopRankIcon";
+import Spinner from "@/components/common/Spinner";
+import TopRankIcon from "@/components/leaderboard/TopRankIcon";
 import { LeaderboardContainer, LeaderboardRow } from "./Leaderboard";
 import useGameStore from "@/store/game";
 

@@ -8,8 +8,8 @@ import {
 } from "@react-three/drei";
 import { Object3DNode, extend, useFrame } from "@react-three/fiber";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
-import { ShipController } from "./ShipController";
-import { Pirate } from "./Pirate";
+import { ShipController } from "@/components/three/ShipController";
+import { Pirate } from "@/components/three/Pirate";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Water } from "three-stdlib";
 import { useControls } from "leva";

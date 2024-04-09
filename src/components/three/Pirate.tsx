@@ -7,7 +7,6 @@ import {
 import { screen } from "@/config/game";
 import { Texture } from "three";
 import useGameStore, { useGameActions } from "@/store/game";
-// import { FakeGlowMaterial } from "./three/FakeGlowMaterial";
 import type { Pirate as TPirate } from "@/types";
 
 export const Pirate = () => {
@@ -71,10 +70,6 @@ const TexturedCylinder = ({ img }: { img: string }) => {
 
   return (
     <Cylinder scale={[0.5, 0, 0.5]} rotation={[0, Math.PI / 2, 0]}>
-      {/* <mesh position={[0, 2, -0.5]}>
-        <sphereGeometry args={[10, 2, 0]} />
-        <FakeGlowMaterial glowColor={"0xffffff"} />
-      </mesh> */}
       <meshBasicMaterial map={texture} transparent />
     </Cylinder>
   );

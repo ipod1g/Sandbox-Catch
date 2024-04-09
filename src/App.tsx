@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
-import { Experience } from "@/components/Experience";
-import { UI } from "@/components/ui";
+import { Experience } from "@/components/three/Experience";
+import { UIManager } from "@/components/ui";
 import { KeyboardControls, Stats } from "@react-three/drei";
 import { Suspense, useMemo } from "react";
 import { Physics } from "@react-three/rapier";
@@ -51,7 +51,7 @@ function App() {
             </Physics>
           </Suspense>
         </Canvas>
-        <UI />
+        <UIManager />
       </KeyboardControls>
     </>
   );

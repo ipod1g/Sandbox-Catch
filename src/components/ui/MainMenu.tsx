@@ -1,5 +1,5 @@
 import { useGameActions } from "@/store/game";
-import { Button } from "../common/Button";
+import { Button } from "@/components/common/Button";
 import { screen } from "@/config/game";
 
 export const MainMenu = () => {

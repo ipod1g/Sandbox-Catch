@@ -6,8 +6,8 @@ import {
   RigidBody,
 } from "@react-three/rapier";
 import { useRef } from "react";
-import { Controls } from "../App";
-import Ship from "./three/Ship";
+import { Controls } from "@/App";
+import Ship from "./Ship";
 import { Group, Object3DEventMap } from "three";
 import { screen } from "@/config/game";
 import useGameStore from "@/store/game";

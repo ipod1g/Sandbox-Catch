@@ -1,13 +1,13 @@
 import { ReactNode, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useFetch } from "@/lib/react-query";
-import TopRankIcon from "../leaderboard/TopRankIcon";
-import Spinner from "../common/Spinner";
-import { Button } from "../common/Button";
-import { Container } from "../common/Container";
+import TopRankIcon from "@/components/leaderboard/TopRankIcon";
+import Spinner from "@/components/common/Spinner";
+import { Button } from "@/components/common/Button";
+import { Container } from "@/components/common/Container";
 import useGameStore, { useGameActions } from "@/store/game";
 import { screen } from "@/config/game";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { LeaderboardData } from "@/types";
 import { useQueryClient } from "react-query";
 

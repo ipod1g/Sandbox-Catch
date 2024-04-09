@@ -1,7 +1,7 @@
 import { FormEvent, useRef } from "react";
 import { usePost } from "@/lib/react-query";
-import { Button } from "../common/Button";
-import { Container } from "../common/Container";
+import { Button } from "@/components/common/Button";
+import { Container } from "@/components/common/Container";
 import useGameStore, { useGameActions } from "@/store/game";
 import { screen } from "@/config/game";
 

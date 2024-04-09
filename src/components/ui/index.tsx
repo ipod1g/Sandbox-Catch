@@ -7,7 +7,7 @@ import { FinalLeaderboard } from "./FinalLeaderboard";
 import { screen } from "@/config/game";
 import useGameStore from "@/store/game";
 
-export const UI = () => {
+export const UIManager = () => {
   const screenState = useGameStore((state) => state.screenState);
 
   switch (screenState) {
