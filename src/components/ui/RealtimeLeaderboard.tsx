@@ -40,12 +40,7 @@ const LeaderboardTable = () => {
     return <div>Error connecting to backend</div>;
   }
 
-  return (
-    <LeaderboardContent
-      key={JSON.stringify(leaderboardQuery.data)}
-      leaderboardData={leaderboardQuery.data}
-    />
-  );
+  return <LeaderboardContent leaderboardData={leaderboardQuery.data} />;
 };
 
 const LeaderboardContent = ({
