@@ -11,7 +11,8 @@ export function updateRealtimeLeaderboard(
     const currentData = updatedLeaderboard[i];
     const currentScore = currentData.score;
 
-    if (newPayload.score >= currentScore) {
+    // // NOTE: this puts at the top of identical scores
+    if (newPayload.score > currentScore) {
       insertIndex = i;
       break;
     }
@@ -24,30 +25,24 @@ export function updateRealtimeLeaderboard(
     };
   }
 
-  updatedLeaderboard.splice(insertIndex, 0, {
+  const newEntry = {
     rank: insertIndex + 1,
     ...newPayload,
-  });
+  };
 
+  updatedLeaderboard.splice(insertIndex, 0, newEntry);
+
+  // update leaderboard with new rank
   for (let i = insertIndex + 1; i < updatedLeaderboard.length; i++) {
     updatedLeaderboard[i].rank += 1;
   }
-
+  // remove any exceeding leaderboard rank row
   if (updatedLeaderboard.length > 100) {
     updatedLeaderboard.pop();
   }
 
   return {
     updatedLeaderboard,
-    newTop100:
-      insertIndex < 100
-        ? {
-            id: newPayload.id,
-            rank: insertIndex + 1, // Adjust rank to be 1-based for display.
-            player: newPayload.player,
-            score: newPayload.score,
-            createdTime: newPayload.createdTime,
-          }
-        : null,
+    newTop100: insertIndex < 100 ? newEntry : null,
   };
 }
