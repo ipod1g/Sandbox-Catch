@@ -137,7 +137,7 @@ function manageGameInterval(set: SetStateFunction, get: GetStateFunction) {
   gameInterval = setInterval(() => {
     const { timer, pirates } = get();
     if (timer <= 0) {
-      clearInterval(gameInterval as NodeJS.Timeout);
+      if (gameInterval !== null) clearInterval(gameInterval);
       gameInterval = null;
       set({ screenState: screen.GAMEOVER });
       return;
